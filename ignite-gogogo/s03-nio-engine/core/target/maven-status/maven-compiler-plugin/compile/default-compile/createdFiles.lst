@@ -1,0 +1,5 @@
+org\apache\ignite\learning\internal\util\nio\NioSession.class
+org\apache\ignite\learning\internal\util\nio\NioServerListener.class
+org\apache\ignite\learning\internal\util\nio\FrameCodec$Decoder.class
+org\apache\ignite\learning\internal\util\nio\NioServer.class
+org\apache\ignite\learning\internal\util\nio\FrameCodec.class
