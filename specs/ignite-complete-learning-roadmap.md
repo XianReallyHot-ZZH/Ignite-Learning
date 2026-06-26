@@ -1,6 +1,6 @@
 # 从零手搓 Apache Ignite · 完整学习路线(Roadmap)
 
-> 驱动提示词:`specs/ignite-roadmap-prompt.md`(经 `/grill-me` 三轮验证定稿)
+> 驱动提示词:`docs-prompt/ignite-roadmap-prompt.md`(经 `/grill-me` 三轮验证定稿)
 > 参考实现:`vendors/ignite`(tag **2.18.0**),所有"镜像源码"路径均经核实真实存在。
 > 目标读者:**CS 在校生**(Java 与分布式系统都需铺垫)。
 
