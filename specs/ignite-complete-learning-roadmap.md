@@ -176,6 +176,7 @@ flowchart LR
 - **验收**:demo = 多连接并发压测不串号;单测覆盖多 worker 下的消息顺序与背压写缓冲。
 - **难度 / 工时**:⭐⭐⭐⭐ / 5~7 天。
 - **产出物**:`NioServer` v2(后续 Communication 的传输根)。
+- **教学文档**:[S04-nio-v2](sessions/S04-nio-v2.md)
 
 ### Session 5(S5)— NIO 引擎 v3:恢复 + 背压
 - **镜像源码**:`.../internal/util/nio/`(recovery descriptor、SSL filter 相关类)。
