@@ -19,6 +19,7 @@ stage ③:**分析 → 教学文档 → [代码]**。
 ## 步骤
 1. **建工程**:`ignite-gogogo/sNN-<短名>/`(父 pom + `core` 子模块;`maven.compiler.release=17`;JUnit5)。Java 根包 `org.apache.ignite.learning.*`,对齐 `specs/assets/package-layout.md`。
    - 非 S3 的 session:通常**复制上一个 session 的工程目录**作为起点再扩展(增量)。
+   - 复制后:**`rm -rf <新工程>/core/target`**(别带上一个 session 的编译产物);要改的文件**先删再写**(或先 Read 再 Write —— Write 无法直接覆盖未读过的文件)。
 2. **实现**:按教学文档的 v1→v3 步骤 + 代码骨架;在注释里标注所镜像的 Ignite 类。Ignite 自写层纯 JDK;Ignite 用第三方库处我们同用(如 SQL→H2)。
 3. **写单测**:覆盖教学文档的验收(关键路径 + 边界;如 NIO 的帧粘包/半包)。优先确定性纯逻辑测试,再加一个端到端集成测试。
 4. **跑绿**:执行 `mvn -f ignite-gogogo/sNN-<短名>/pom.xml test`,直到 **BUILD SUCCESS、0 失败**。
