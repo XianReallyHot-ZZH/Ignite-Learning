@@ -30,6 +30,7 @@
 | 纳入 | NIO+Marshaller / Discovery / Communication / Kernal / PageMemory / WAL+PageStore+B+树+Checkpoint / 本地缓存 / Affinity / PME / DHT+副本 / 完整事务 / SQL(H2) / 完整Compute |
 | 后置扩展 | Service Grid / Continuous Query / Data Streamer / 数据结构 / Thin client / ODBC / JDBC |
 | 排除 | 平台(.NET/C++) / 安全·认证·加密 / ML / 集成 / benchmark |
+| 代码组织 | 每个 Session 一个**独立的多模块 Maven 工程**,放 `ignite-gogogo/sNN-短名/`;新 Session 以上一 Session 工程为起点复制再扩展(增量落在独立工程上) |
 
 ### 依赖锚点(已核实结构事实,排序以此为准)
 - **Discovery ⊥ Communication**:Discovery 用裸 `ServerSocket`,不依赖 `GridNioServer`/`GridIoManager`;仅 `GridIoManager` 单向读 Discovery 拓扑寻址。⇒ 二者可并列开发,但 Communication 的路由依赖 Discovery。
@@ -130,7 +131,7 @@ flowchart LR
 - **镜像源码**:`vendors/ignite/pom.xml`、`vendors/ignite/parent/`、`vendors/ignite/modules/core/pom.xml`(看模块划分思路,不照抄)。
 - **前置**:无。
 - **实现要点**:
-  - v1:Maven 多模块骨架(父 `ignite-learning` + 子模块 `ignite-core`),`mvn -q compile` 通过。
+  - v1:Maven 多模块工程骨架(本 Session 独立工程 `ignite-gogogo/s01-skeleton/`:父 pom + `core` 子模块,Java 包根 `org.apache.ignite.learning`),`mvn -q compile` 通过。
   - v1:接入 JUnit 5 + AssertJ;写一个 `HelloTest` 跑绿。
   - v1:约定目录:`internal/` 放实现、`spi/`/`cache/` 放契约(对齐 Ignite 习惯)。
 - **验收**:demo = `mvn test` 全绿;单测覆盖 `HelloTest`。

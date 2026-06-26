@@ -3,21 +3,31 @@
 > 全局参考:给你"从零手搓 Ignite"的实现一个**对齐 Ignite 的代码家**。每个 Session 的代码往哪写、新增哪些包/类,都在这里对号入座。
 > 原则:**包名对齐 Ignite**(便于对照 `vendors/ignite` 源码),但根包用自己的命名空间,避免与 vendored 源码混淆。
 
-## 1. 根包与模块
+## 1. 顶层结构:每个 Session 一个独立多模块工程
+
+所有手搓代码放在仓库根的 `ignite-gogogo/` 下;**每个 Session = 一个独立、可单独打开运行的多模块 Maven 工程**,目录 `ignite-gogogo/sNN-短名/`(短名对齐 `specs/sessions/SNN-短名.md`)。新 Session 通常**以上一 Session 的工程为起点复制再扩展**(增量)。
 
 ```
-ignite-learning/                              # Maven 父模块
-└─ modules/
-   └─ core/
-      └─ src/main/java/
-         └─ org/apache/ignite/learning/       # ← 我们的根包(对照 org/apache/ignite/)
+ignite-gogogo/                                # 所有 Session 工程的容器
+├─ README.md                                  # 本目录约定
+├─ s01-skeleton/                              # ← S1:独立多模块 Maven 工程
+│  ├─ pom.xml                                 #   父 pom(aggregator,对照 Ignite 根 pom)
+│  └─ core/                                   #   子模块(对照 Ignite 的 modules/core)
+│     ├─ pom.xml
+│     ├─ src/main/java/org/apache/ignite/learning/   # ← 我们的 Java 根包
+│     └─ src/test/java/org/apache/ignite/learning/
+├─ s02-nio-warmup/                            # ← S2:复制 s01 → 扩展
+├─ s03-nio-engine/                            # ← S3
+└─ …                                          # 后期 Session 可新增 feature 子模块(如 …/indexing/)
 ```
 
-> 对照参考:`vendors/ignite/modules/core/src/main/java/org/apache/ignite/`。下文"对应 Ignite"列即指此根下的相对路径。
+> - **模块划分对齐 Ignite**:早期 Session 只需 `core` 子模块;后期(引入 SQL 等)再按 Ignite 风格新增 feature 子模块(如 `indexing`)。
+> - **对照参考**:每个工程内的 Java 包根 `org/apache/ignite/learning/` 对照 `vendors/ignite/modules/core/src/main/java/org/apache/ignite/`。下文 §2 的"对应 Ignite"列即指此根下的相对路径。
+> - 详细包 ↔ Ignite ↔ Session 映射见 §2;每个 Session 的具体代码骨架落点见其教学文档「执行前分析」。
 
 ## 2. 包 ↔ Ignite ↔ Session 映射
 
-> "填充 Session"列指向 `specs/ignite-complete-learning-roadmap.md` 的 Session 编号。空 = 跨多 Session / 基础设施。
+> 下表"学习者包"指**每个 Session 工程内** `core/src/main/java/org/apache/ignite/` 下的相对包路径。"填充 Session"列指向 `specs/ignite-complete-learning-roadmap.md` 的 Session 编号。空 = 跨多 Session / 基础设施。
 
 ### 2.1 public API 层(薄、稳定,先定义契约)
 
@@ -91,6 +101,7 @@ ignite-learning/                              # Maven 父模块
 
 ## 3. 使用方式
 
-1. **每个 Session 开始时**:在本 Session 教学文档的「执行前分析」里,明确"本次在上述哪个包新增/修改哪些类"——这就是该 Session 的代码骨架落点。
-2. **对照阅读**:写到 `learning/internal/pagemem/PageMemory.java` 时,并行打开 `vendors/.../internal/pagemem/PageMemory.java` 对照设计(不是抄)。
-3. **渐进生长**:`GridKernalContext` / `IgniteKernal` 这种"接线"类会随 Session 增多逐步填充——别一开始就写满,用到谁加谁。
+1. **建工程**:开始一个 Session 时,在 `ignite-gogogo/` 下建 `sNN-短名/`——通常**复制上一 Session 的工程目录**作为起点(第一个 Session 从零建父 pom + `core`)。增量就落在这些独立工程上。
+2. **执行前分析**:在本 Session 教学文档里,明确"本次在 §2 哪个包新增/修改哪些类"——即代码骨架落点。
+3. **对照阅读**:写到 `learning/internal/pagemem/PageMemory.java` 时,并行打开 `vendors/.../internal/pagemem/PageMemory.java` 对照设计(不是抄)。
+4. **渐进生长**:`GridKernalContext` / `IgniteKernal` 这种"接线"类会随 Session 增多逐步填充——别一开始就写满,用到谁加谁(随工程复制带到后续 Session)。
