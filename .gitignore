@@ -1,0 +1,26 @@
+# --- Maven ---
+target/
+
+# --- Java ---
+*.class
+hs_err_pid*.log
+replay_pid*.log
+
+# --- IDE: IntelliJ ---
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# --- IDE: Eclipse ---
+.settings/
+.project
+.classpath
+.factorypath
+
+# --- IDE: VS Code ---
+.vscode/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
