@@ -165,6 +165,7 @@ flowchart LR
 - **验收**:demo = 两个 JVM 用 NioServer 互发结构化消息;单测覆盖帧的粘包/半包。
 - **难度 / 工时**:⭐⭐⭐ / 3~5 天。
 - **产出物**:`NioServer` v1。
+- **教学文档**:[S03-nio-engine](sessions/S03-nio-engine.md)
 
 ### Session 4(S4)— NIO 引擎 v2:多 worker + 过滤链
 - **镜像源码**:`.../internal/util/nio/GridNioWorker.java`、`GridNioFilterChain.java`、`GridSelectorNioSessionImpl.java`。
