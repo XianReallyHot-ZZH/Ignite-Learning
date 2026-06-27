@@ -77,6 +77,8 @@
 | S35 | failover | ☐ | ☐ | ☐ | ☐ |
 
 ## 里程碑
+> ☑ **前置**:产出 `specs/benchmarks/M?-report.md` 且 `scripts/check-milestone-report.sh` 通过(方法见 `specs/assets/benchmarking-against-ignite.md`)。
+
 | 里程碑 | 内容 | 到达? |
 |---|---|---|
 | M1 | 单节点可恢复持久化 KV | ☐ |

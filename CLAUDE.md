@@ -35,6 +35,7 @@
 - **保真**:Ignite 自写层纯 JDK 手写;Ignite 用第三方库处我们同用(如 SQL→H2)。
 - **grounding**:分析/规格靠 Explore 读 `vendors/ignite` 真实源码 + **`scripts/check-cited-paths.sh`** 机器核验(不凭记忆、不自报勾选);代码靠**真跑** `mvn -f ignite-gogogo/sNN-*/pom.xml test` 见 `BUILD SUCCESS`,且 §5 具名测试全部存在且绿。
 - **依赖锚点 / 包结构**:见 `specs/assets/reading-ignite-source.md`、`specs/assets/package-layout.md`;Java 根包 `org.apache.ignite.learning.*`。
+- **里程碑门**:到达 M1~M7 时产出 `specs/benchmarks/M?-report.md`(与 Ignite 的**功能 + 性能**基准对比,方法见 `specs/assets/benchmarking-against-ignite.md`);`scripts/check-milestone-report.sh` 通过才许在 PROGRESS 勾里程碑 ☑。
 - **工具链**:Java 21 + Maven 3.9.6。`.gitignore` 已忽略 `target/`。
 
 ## 会话结束前

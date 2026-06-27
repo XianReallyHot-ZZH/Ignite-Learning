@@ -12,14 +12,14 @@
 
 - **不是**按源码目录顺序读代码;**是**按"一个实现者真正能顺着依赖把系统重建出来"的顺序造轮子。
 - 每个子系统走 **v1(最小可运行)→ v2(功能完整)→ v3(忠实)** 保真阶梯。
-- 每个 **Session** 站在上一 Session 的代码上往下做;到达**里程碑 M1~M7** 时补端到端测试 + demo + 与 Ignite 的性能/正确性基准对比。
+- 每个 **Session** 站在上一 Session 的代码上往下做;到达**里程碑 M1~M7** 时补端到端测试 + demo,并产出 `specs/benchmarks/M?-report.md`(与 Ignite 的**功能 + 性能**基准对比,需过 `scripts/check-milestone-report.sh` 门)。
 
 ## 1. 如何使用本文档
 
 1. **严格顺序**:Session 全局编号(S1, S2, …),后置 Session 的"前置"只引用更早的 Session。不要跳。
 2. **每个 Session 必须做到三件事再进下一个**:① 代码可运行(`mvn test`/demo 绿);② 有匹配单元测试;③ 能口头讲清"这步在镜像 Ignite 的哪个机制"。
 3. **对照源码**:每个 Session 给出 `vendors/ignite` 路径,先读对应 Ignite 代码理解"目标形态",再自己复现(不是抄)。
-4. **里程碑(M1~M7)**:到这里停下来,补 e2e 测试 + demo + 与 Ignite 基准对比,再继续。
+4. **里程碑(M1~M7)**:到这里停下来,补 e2e 测试 + demo,产出 `specs/benchmarks/M?-report.md`(功能一致性 + 性能基准 + 差距分析,方法见 `specs/assets/benchmarking-against-ignite.md`);**`scripts/check-milestone-report.sh` 通过才许在 PROGRESS 勾里程碑 ☑**,再继续。
 
 ## 2. 设计决策(节选,详见提示词文件)
 
@@ -107,8 +107,10 @@ flowchart LR
 | **phase 源码分析** | `specs/phases/PNN-*-analysis.md` | 该 phase 的 grounded 输入(§6 含 **v 级**拆分 + 修订记录 + 引用附录) | 每 phase 一次,先于其 session |
 | **Session 执行规格** | `specs/sessions/SNN-短名.md` | **约束 AI 的瘦规格**:范围/对外接口契约/源码导读/实现步骤/具名验收/引用附录 | 每 session,just-in-time |
 | **Session 学习者讲义** | `docs-learn/SNN-短名.md`(可选) | 教学法:概念图/why/陷阱/自测题/对照 | 按需 |
+| **里程碑基准报告** | `specs/benchmarks/M?-report.md` | 与 Ignite 的**功能一致性 + 性能基准 + 差距分析**(Ignite 为 oracle) | 每里程碑,**☑ 前置** |
 
 **防幻觉(机器可校验)**:执行规格与 phase 分析末尾都有 ` ```cited-paths ` 附录;产出后跑 `scripts/check-cited-paths.sh` 核验全部引用路径真实存在(取代自报勾选)。
+**里程碑门(机器可校验)**:里程碑 ☑ 前置 = 产出 `specs/benchmarks/M?-report.md` 且 `scripts/check-milestone-report.sh` 通过(功能一致性 + 性能 ≥3 workload + 差距分析 + 自检全勾;方法见 `specs/assets/benchmarking-against-ignite.md`)。
 
 **Session 执行规格约定:**
 - 路径 `specs/sessions/SNN-短名.md`;模板 `specs/sessions/_TEMPLATE-spec.md`(教学法另用 `docs-learn/_TEMPLATE-handout.md`)。

@@ -34,6 +34,7 @@
 - **保真**:Ignite 自写层纯 JDK;Ignite 用第三方库处同用(如 SQL→H2)。
 - **依赖锚点**:顺序主张与 roadmap §依赖锚点一致。
 - **进度同步**:每个 skill 完成后更新 `specs/PROGRESS.md`。
+- **里程碑门**:M1~M7 的 ☑ 前置 = 产出 `specs/benchmarks/M?-report.md`(功能一致性 + 性能对比 Ignite)+ `scripts/check-milestone-report.sh` 通过(方法见 `specs/assets/benchmarking-against-ignite.md`)。
 
 ## 节奏
 - 一个 phase:`/ignite-analyze-phase` **一次**;然后每 session 按 `session-doc → session-code` **顺序**推进。
