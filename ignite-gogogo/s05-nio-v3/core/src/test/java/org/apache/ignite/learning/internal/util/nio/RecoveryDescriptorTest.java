@@ -8,13 +8,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** RecoveryDescriptor 纯逻辑测试:计数器、未确认队列、ack、握手对齐、溢出、release 语义。 */
+/**
+ * {@link RecoveryDescriptor} 纯逻辑测试(不依赖网络)。
+ * 覆盖:计数器 + 未确认队列、ack 弹出、握手对齐、队列溢出、release(drain vs 保留)语义。
+ */
 class RecoveryDescriptorTest {
 
+    /** 工具:把字符串包成 ByteBuffer(模拟一条已编码消息)。 */
     private static ByteBuffer msg(String s) {
         return ByteBuffer.wrap(s.getBytes());
     }
 
+    /** 基本:发 3 条 → sentCnt=3、unacked=3、acked=0。 */
     @Test
     void countersAndUnackedQueue() {
         RecoveryDescriptor rd = new RecoveryDescriptor(10);
@@ -26,6 +31,7 @@ class RecoveryDescriptorTest {
         assertEquals(0, rd.ackedCount());
     }
 
+    /** ack:对方确认收到 2 条 → 弹出 2 条已确认,unacked 剩 1。 */
     @Test
     void ackReceivedDropsAcked() {
         RecoveryDescriptor rd = new RecoveryDescriptor(10);
@@ -37,6 +43,7 @@ class RecoveryDescriptorTest {
         assertEquals(1, rd.unackedCount());
     }
 
+    /** 握手对齐:对方说"收到 1"→ 丢 a,返回需重发的 b,c(2 条);acked=1、unacked=2。 */
     @Test
     void onHandshakeAligns() {
         RecoveryDescriptor rd = new RecoveryDescriptor(10);
@@ -49,18 +56,20 @@ class RecoveryDescriptorTest {
         assertEquals(2, rd.unackedCount());
     }
 
+    /** 溢出:queueLimit=2,第 3 条 add 返回 false(应触发重连)。 */
     @Test
     void overflowTriggersReconnect() {
         RecoveryDescriptor rd = new RecoveryDescriptor(2);
-        assertTrue(rd.add(msg("a")));  // size 1
-        assertTrue(rd.add(msg("b")));  // size 2(到限)
+        assertTrue(rd.add(msg("a")));  // size 1 → true
+        assertTrue(rd.add(msg("b")));  // size 2(到限)→ true
         assertFalse(rd.add(msg("c"))); // size 3 → 溢出 → false(应触发重连)
         assertEquals(3, rd.unackedCount());
     }
 
+    /** release 语义:节点离开 → 排空(fail 回调);仅断线、对端仍活 → 保留待重发。 */
     @Test
     void releaseSemantics() {
-        // 节点离开 → 排空(fail 回调)
+        // 节点离开 → 排空(调用方逐条 fail)
         RecoveryDescriptor left = new RecoveryDescriptor(10);
         left.add(msg("a"));
         left.add(msg("b"));
@@ -68,7 +77,7 @@ class RecoveryDescriptorTest {
         assertEquals(2, drained.size());
         assertEquals(0, left.unackedCount());
 
-        // 仍活 → 保留待重发
+        // 仍活 → 保留待重连重发
         RecoveryDescriptor alive = new RecoveryDescriptor(10);
         alive.add(msg("a"));
         alive.add(msg("b"));

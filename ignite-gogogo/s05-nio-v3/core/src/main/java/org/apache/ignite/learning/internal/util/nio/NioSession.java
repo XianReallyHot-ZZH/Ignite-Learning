@@ -7,9 +7,14 @@ import java.nio.channels.SocketChannel;
 
 /**
  * 会话状态 v3(镜像 {@code GridNioSession} / {@code GridSelectorNioSessionImpl})。
- * 相比 v2:写队列改 {@link BoundedWriteQueue}(发送背压);新增可选 {@link RecoveryDescriptor}
- * 与 {@link MessageTracker}(接收背压);{@code pauseReads/resumeReads} 交 owning worker 翻 OP_READ。
- * 默认:无界写队列、无 recovery、无 tracker → 行为同 v2(echo 等不受影响)。
+ *
+ * <p>相比 v2 的演进:
+ * <ul>
+ *   <li>写队列改 {@link BoundedWriteQueue}(发送背压:有界 + 信号量);</li>
+ *   <li>新增可选 {@link RecoveryDescriptor}(断线重连重发)与 {@link MessageTracker}(接收背压);</li>
+ *   <li>{@code pauseReads/resumeReads} 交 owning worker 翻 {@code OP_READ}。</li>
+ * </ul>
+ * <p><b>默认</b>:无界写队列、无 recovery、无 tracker → 行为同 v2(echo 等不受影响);三者均按需开启。</p>
  */
 public final class NioSession {
 
@@ -17,10 +22,11 @@ public final class NioSession {
     private final SelectionKey key;
     private final FilterChain chain;
     private final ClientWorker myWorker;
+    /** 有界写队列(发送背压);默认 limit=0=无界(无信号量)。 */
     private final BoundedWriteQueue writeQueue;
 
-    private RecoveryDescriptor recoveryDesc; // 可选
-    private MessageTracker tracker;          // 可选
+    private RecoveryDescriptor recoveryDesc; // 可选:断线重连重发
+    private MessageTracker tracker;          // 可选:接收背压
     private final Object[] meta = new Object[16];
     private volatile boolean closed;
 
@@ -62,6 +68,7 @@ public final class NioSession {
     }
 
     // ---- 写队列(发送背压)----
+    // offer/peek/poll 三件套封装 BoundedWriteQueue:offer 满则阻塞(信号量),poll 释放。
     void offerFuture(ByteBuffer buf) {
         writeQueue.offer(buf);
     }
@@ -87,7 +94,7 @@ public final class NioSession {
         return recoveryDesc;
     }
 
-    /** recovery 队列溢出 → 关闭 channel,触发消费者重连(镜像 Ignite 的溢出重连)。 */
+    /** recovery 未确认队列溢出 → 关闭 channel,触发消费者重连(镜像 Ignite 的溢出重连自愈)。 */
     void triggerReconnect() {
         myWorker.submit(() -> {
             try {
@@ -107,7 +114,7 @@ public final class NioSession {
         return tracker;
     }
 
-    /** 暂停/恢复读 → 交 owning worker 在其线程翻 OP_READ(interestOps 非线程安全)。 */
+    /** 暂停读:交 owning worker 在其线程清 OP_READ(interestOps 非线程安全,必须 owner 线程)。 */
     void pauseReads() {
         myWorker.submit(() -> {
             try {
@@ -118,6 +125,7 @@ public final class NioSession {
         });
     }
 
+    /** 恢复读:交 owning worker 在其线程置 OP_READ。 */
     void resumeReads() {
         myWorker.submit(() -> {
             try {
