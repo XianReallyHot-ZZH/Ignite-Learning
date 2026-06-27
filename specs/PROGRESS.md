@@ -5,8 +5,8 @@
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
-- **最近完成**:S5(NIO v3)执行规格(cited-paths 6/6 过,2026-06-27)。
-- **下一步**:写 S5 代码(`/ignite-session-code 05`):从 s04 复制 → s05,加 recovery + 双重背压 + SSL 槽,mvn 跑绿。完成即 Phase 1 收官。
+- **最近完成**:**S5(NIO v3)全流程 —— 18 passed;Phase 1(NIO)收官**(2026-06-27)。
+- **下一步**:**Phase 2(Marshaller + Direct,S6~S7)** —— `/ignite-analyze-phase 2` → `/ignite-session-doc 06` → `/ignite-session-code 06` …(Phase 1 无里程碑,M1 要到 S15)
 - **试点**:Phase 1(NIO)流水线验证中;Phase 0(S1~S2)试点期间暂越过(真做课程时 Phase 0 先行)。
 
 ## 基础设施(已建立)
@@ -44,7 +44,7 @@
 | S2 | NIO/并发热身 | ☐ | ☐ | ☐ | ☐(试点越过) |
 | **S3** | **NIO v1(单worker+会话+帧)** | ☑ `S03-nio-engine.md` | ☑ `s03-nio-engine/` | ☑ 6 passed | ☑ |
 | **S4** | **NIO v2(多worker+过滤链)** | ☑ `S04-nio-v2.md` | ☑ `s04-nio-v2/` | ☑ 10 passed | ☑ |
-| **S5** | **NIO v3(recovery+背压)** | ☑ `S05-nio-v3.md` | ☐ | ☐ | ◐(待写代码) |
+| **S5** | **NIO v3(recovery+背压)** | ☑ `S05-nio-v3.md` | ☑ `s05-nio-v3/` | ☑ 18 passed | ☑ |
 | S6 | Direct 编解码 | ☐ | ☐ | ☐ | ☐ |
 | S7 | Marshaller | ☐ | ☐ | ☐ | ☐ |
 | S8 | 页内存 v1 | ☐ | ☐ | ☐ | ☐ |
@@ -92,3 +92,4 @@
 ## 已验证的工程
 - `ignite-gogogo/s03-nio-engine/`:`mvn test` → **6 passed, 0 failed**(FrameCodec 5 + NioServerEcho 1),Java 21 + Maven 3.9.6。
 - `ignite-gogogo/s04-nio-v2/`:`mvn test` → **10 passed, 0 failed**(FrameCodec 5 + FilterChain 2 + CodecFilter 2 + MultiWorkerEcho 1)。
+- `ignite-gogogo/s05-nio-v3/`:`mvn test` → **18 passed, 0 failed**(继承 10 + RecoveryDescriptor 5 + RecoveryResend 1 + SendBackpressure 1 + ReceiveBackpressure 1)。
