@@ -5,8 +5,8 @@
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
-- **最近完成**:**S5(NIO v3)全流程 —— 18 passed;Phase 1(NIO)收官**(2026-06-27)。
-- **下一步**:**Phase 2(Marshaller + Direct,S6~S7)** —— `/ignite-analyze-phase 2` → `/ignite-session-doc 06` → `/ignite-session-code 06` …(Phase 1 无里程碑,M1 要到 S15)
+- **最近完成**:**Phase 0 回补** —— S1(骨架,1 测试)+ S2(NIO 热身,1 测试)均绿(2026-06-27);此前 Phase 1(NIO,S3~S5)已完成。
+- **下一步**:**Phase 2(Marshaller + Direct,S6~S7)** —— `/ignite-analyze-phase 2` → `/ignite-session-doc 06` → `/ignite-session-code 06` …(Phase 0/1 无里程碑,M1 要到 S15)
 - **试点**:Phase 1(NIO)流水线验证中;Phase 0(S1~S2)试点期间暂越过(真做课程时 Phase 0 先行)。
 
 ## 基础设施(已建立)
@@ -19,7 +19,7 @@
 ## Phase 源码分析
 | Phase | 子系统 | 分析文档 | 状态 |
 |---|---|---|---|
-| 0 | 前置基础 | — | ☐(试点越过) |
+| 0 | 前置基础 | N/A(不镜像 Ignite) | ☑(S1/S2 已补) |
 | 1 | NIO 引擎 | `phases/P01-nio-analysis.md` | ☑ |
 | 2 | Marshaller + Direct | — | ☐ |
 | 3 | 页内存 PageMemory | — | ☐ |
@@ -40,8 +40,8 @@
 
 | # | Session | 教学文档 | 代码工程 | 测试 | 状态 |
 |---|---|---|---|---|---|
-| S1 | 项目骨架 | ☐ | ☐ | ☐ | ☐(试点越过) |
-| S2 | NIO/并发热身 | ☐ | ☐ | ☐ | ☐(试点越过) |
+| **S1** | **项目骨架** | ☑ `S01-skeleton.md` | ☑ `s01-skeleton/` | ☑ 1 passed | ☑ |
+| **S2** | **NIO/并发热身** | ☑ `S02-nio-warmup.md` | ☑ `s02-nio-warmup/` | ☑ 1 passed | ☑ |
 | **S3** | **NIO v1(单worker+会话+帧)** | ☑ `S03-nio-engine.md` | ☑ `s03-nio-engine/` | ☑ 6 passed | ☑ |
 | **S4** | **NIO v2(多worker+过滤链)** | ☑ `S04-nio-v2.md` | ☑ `s04-nio-v2/` | ☑ 10 passed | ☑ |
 | **S5** | **NIO v3(recovery+背压)** | ☑ `S05-nio-v3.md` | ☑ `s05-nio-v3/` | ☑ 18 passed | ☑ |
@@ -93,3 +93,5 @@
 - `ignite-gogogo/s03-nio-engine/`:`mvn test` → **6 passed, 0 failed**(FrameCodec 5 + NioServerEcho 1),Java 21 + Maven 3.9.6。
 - `ignite-gogogo/s04-nio-v2/`:`mvn test` → **10 passed, 0 failed**(FrameCodec 5 + FilterChain 2 + CodecFilter 2 + MultiWorkerEcho 1)。
 - `ignite-gogogo/s05-nio-v3/`:`mvn test` → **18 passed, 0 failed**(继承 10 + RecoveryDescriptor 5 + RecoveryResend 1 + SendBackpressure 1 + ReceiveBackpressure 1)。
+- `ignite-gogogo/s01-skeleton/`:`mvn test` → **1 passed**(HelloTest;多模块骨架,后续复制源)。
+- `ignite-gogogo/s02-nio-warmup/`:`mvn test` → **1 passed**(EchoTest#echoRoundtrip;单线程 Selector echo 往返)。

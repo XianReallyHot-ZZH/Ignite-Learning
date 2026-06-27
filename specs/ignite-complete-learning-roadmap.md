@@ -138,6 +138,7 @@ flowchart LR
 - **验收**:demo = `mvn test` 全绿;单测覆盖 `HelloTest`。
 - **难度 / 工时**:⭐ / 0.5 天。
 - **产出物**:可编译可测试的多模块骨架。
+- **教学文档**:[S01-skeleton](sessions/S01-skeleton.md)
 
 ### Session 2(S2)— Java 并发与 NIO 热身
 - **Phase / 子系统**:Phase 0 / 语言基础
@@ -150,6 +151,7 @@ flowchart LR
 - **验收**:demo = echo server 两端跑通;单测覆盖帧编解码与线程池行为。
 - **难度 / 工时**:⭐⭐ / 2~3 天。
 - **产出物**:echo server 原型 + 并发笔记。
+- **教学文档**:[S02-nio-warmup](sessions/S02-nio-warmup.md)
 
 ---
 
