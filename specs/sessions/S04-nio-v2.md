@@ -14,6 +14,7 @@
 
 ## 2. 对外接口契约
 > DAG 出边:S4 → S5 / S20。下游复用的 public 契约:
+
 | 类型/方法 | 签名 / 语义 | 供下游 session |
 |---|---|---|
 | `NioServer(InetSocketAddress, int workerCount, NioServerListener, Supplier<List<Filter>>)` | 多 worker 服务器;`send(NioSession, byte[])` 经链出站 | S5(加 recovery/背压)、S20(Communication 注册 listener + filters) |
@@ -46,6 +47,7 @@ public void send(NioSession s, byte[] msg) { s.chain().fireOutbound(s, msg); } /
 ```
 
 ## 5. 验收 = 具名测试
+
 | 验收点 | 测试 |
 |---|---|
 | 过滤链入站顺序(wire→app) | `FilterChainTest#inboundWalksWireToApp` |

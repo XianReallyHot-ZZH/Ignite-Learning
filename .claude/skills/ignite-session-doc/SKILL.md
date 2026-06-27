@@ -1,6 +1,6 @@
 ---
 name: ignite-session-doc
-description: 从零手搓 Ignite —— 为某 session 产出"执行规格"(stage ②,约束 AI 的瘦规格)。当某 phase 已分析完、用户要"写 session 文档/规格/教 S??"时使用。基于 phase 分析,从 _TEMPLATE-spec.md 产出 specs/sessions/SNN-*.md(范围/对外接口契约/源码导读/实现步骤/具名验收/引用路径附录),跑 cited-paths lint,挂 roadmap 链接。教学法另写 docs-learn/ 讲义(按需)。调用 /ignite-session-doc <NN>。
+description: 从零手搓 Ignite —— 为某 session 产出"执行规格"(stage ②,约束 AI 的瘦规格)。当某 phase 已分析完、用户要"写 session 文档/规格/教 S??"时使用。基于 phase 分析,从 _TEMPLATE-spec.md 产出 specs/sessions/SNN-*.md(范围/对外接口契约/源码导读/实现步骤/具名验收/引用路径附录),跑 cited-paths lint,挂 roadmap 链接。必写配套 docs-learn/ 讲义(check-handouts.sh 把关)。调用 /ignite-session-doc <NN>。
 ---
 
 # ignite-session-doc &lt;NN&gt;

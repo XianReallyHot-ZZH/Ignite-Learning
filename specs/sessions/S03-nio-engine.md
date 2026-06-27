@@ -14,6 +14,7 @@
 
 ## 2. 对外接口契约
 > DAG 出边:S3 → S4 / S5 / S20。下游复用的 public 契约:
+
 | 类型/方法 | 签名 / 语义 | 供下游 session |
 |---|---|---|
 | `FrameCodec.encode(byte[])` / `FrameCodec.Decoder.decode(ByteBuffer)` | 长度前缀帧 `[4B 大端长度][载荷]`;decode 状态机处理粘包/半包 | S4(`CodecFilter` 直接复用)、S5、S20 |
@@ -43,6 +44,7 @@ void send(NioSession s, byte[] msg) {
 ```
 
 ## 5. 验收 = 具名测试
+
 | 验收点 | 测试 |
 |---|---|
 | 帧往返 | `FrameCodecTest#roundtripSingle` |

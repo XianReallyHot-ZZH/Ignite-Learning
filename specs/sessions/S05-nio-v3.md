@@ -14,6 +14,7 @@
 
 ## 2. 对外接口契约
 > DAG 出边:S5 → S20(Communication)。下游复用的 public 契约:
+
 | 类型/方法 | 签名 / 语义 | 供下游 session |
 |---|---|---|
 | `RecoveryDescriptor` | 每 connection:计数器(`sentCnt`/`acked`/`rcvCnt`)+ 有界 `unacked` 队列;`add(req)`、`ackReceived(rcv)`、`onHandshake(rcv)`、`resend(ses)`、`release(nodeLeft)` | S20(拥有 descriptor,handshake 后接入 session) |
@@ -39,6 +40,7 @@
 7. **SSL 槽**:在过滤链预留 `SslFilter` 占位(空实现/直通),真实加密不做。
 
 ## 5. 验收 = 具名测试
+
 | 验收点 | 测试 |
 |---|---|
 | 计数器 + 未确认队列基本正确 | `RecoveryDescriptorTest#countersAndUnackedQueue` |
