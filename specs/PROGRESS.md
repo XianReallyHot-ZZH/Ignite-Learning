@@ -5,8 +5,8 @@
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
-- **最近完成**:S4(NIO v2)全流程 —— 教学文档 + 代码工程 + 测试全绿(10 passed,2026-06-27)。
-- **下一步**:S5(NIO v3:recovery + 背压)—— `/ignite-session-doc 05` → `/ignite-session-code 05`;完成后 Phase 1(NIO)收官。
+- **最近完成**:S5(NIO v3)执行规格(cited-paths 6/6 过,2026-06-27)。
+- **下一步**:写 S5 代码(`/ignite-session-code 05`):从 s04 复制 → s05,加 recovery + 双重背压 + SSL 槽,mvn 跑绿。完成即 Phase 1 收官。
 - **试点**:Phase 1(NIO)流水线验证中;Phase 0(S1~S2)试点期间暂越过(真做课程时 Phase 0 先行)。
 
 ## 基础设施(已建立)
@@ -44,7 +44,7 @@
 | S2 | NIO/并发热身 | ☐ | ☐ | ☐ | ☐(试点越过) |
 | **S3** | **NIO v1(单worker+会话+帧)** | ☑ `S03-nio-engine.md` | ☑ `s03-nio-engine/` | ☑ 6 passed | ☑ |
 | **S4** | **NIO v2(多worker+过滤链)** | ☑ `S04-nio-v2.md` | ☑ `s04-nio-v2/` | ☑ 10 passed | ☑ |
-| S5 | NIO v3(recovery+背压) | ☐ | ☐ | ☐ | ☐ |
+| **S5** | **NIO v3(recovery+背压)** | ☑ `S05-nio-v3.md` | ☐ | ☐ | ◐(待写代码) |
 | S6 | Direct 编解码 | ☐ | ☐ | ☐ | ☐ |
 | S7 | Marshaller | ☐ | ☐ | ☐ | ☐ |
 | S8 | 页内存 v1 | ☐ | ☐ | ☐ | ☐ |
