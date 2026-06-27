@@ -1,31 +1,43 @@
 # Ignite 手搓项目 · Skill 集
 
-把"从零手搓 Ignite"试点(Phase 1 / S3)验证过的**三段流水线**固化成 3 个 skill。每个 phase 按下面顺序串起来用:
+把"从零手搓 Ignite"的三段流水线固化成 skill。每个 phase 按顺序串起来用:
 
 ```
-① /ignite-analyze-phase <N>      # 产 phase 源码分析(每 phase 一次)
+① /ignite-analyze-phase <N>   # phase 源码分析(每 phase 一次)
         ↓
-② /ignite-session-doc <NN>       # 产 session 教学文档(每 session 一次,顺序出)
+② /ignite-session-doc <NN>    # session 执行规格(每 session 一次,顺序出)
         ↓
-③ /ignite-session-code <NN>      # 写 session 代码 + 测试跑绿(每 session 一次)
+③ /ignite-session-code <NN>   # session 代码 + 测试跑绿 + 核验具名测试(每 session 一次)
 ```
+恢复进度:`/ignite-resume`。
 
-## 三个 skill
+## skill
 | Skill | 产物 | 模板 | 防幻觉 |
 |---|---|---|---|
-| `/ignite-analyze-phase <N>` | `specs/phases/PNN-*-analysis.md` | `specs/phases/_TEMPLATE-analysis.md` | 派 Explore 深读源码 + 核验所有引用路径 |
-| `/ignite-session-doc <NN>` | `specs/sessions/SNN-*.md` | `specs/sessions/_TEMPLATE.md` | 只引用 phase 分析里已核验的锚点 |
-| `/ignite-session-code <NN>` | `ignite-gogogo/sNN-*/`(多模块 Maven)+ 测试绿 | — | 必须真跑 `mvn test` 见 BUILD SUCCESS |
+| `/ignite-analyze-phase <N>` | `specs/phases/PNN-*-analysis.md`(§6 含 v级 + 修订记录 + 引用附录) | `specs/phases/_TEMPLATE-analysis.md` | 派 Explore 深读 + **cited-paths lint** |
+| `/ignite-session-doc <NN>` | `specs/sessions/SNN-*.md`(执行规格)+ 可选 `docs-learn/` 讲义 | `specs/sessions/_TEMPLATE-spec.md` / `docs-learn/_TEMPLATE-handout.md` | **cited-paths lint** |
+| `/ignite-session-code <NN>` | `ignite-gogogo/sNN-*/`(多模块 Maven)+ 测试绿 | — | 真跑 `mvn test` + 核验 §5 **具名测试** |
+| `/ignite-resume` | 读 PROGRESS 汇报当前位置 + 下一步 | — | 以工件为准 |
 
-## 共同纪律(三个 skill 都遵守)
-- **grounding 优先**:分析/文档靠 Explore 读 `vendors/ignite` 真实源码;代码靠真跑 `mvn test`。不凭记忆。
-- **保真规则**:Ignite 自写层纯 JDK;Ignite 用第三方库处我们同用(如 SQL→H2)。
-- **依赖锚点**:顺序主张须与 roadmap §依赖锚点一致。
-- **进度同步**:每个 skill 完成后更新 `specs/PROGRESS.md`(roadmap=计划,PROGRESS=状态)。
+## 文档体系(唯一事实源 SoT)
+- **范围/顺序** = `roadmap.md` 的 S 块(权威)。
+- **拆分/grounding** = phase 分析 §6(权威)。
+- **细化 + 对外接口契约 + 具名验收** = session 执行规格。
+- 冲突按 roadmap→分析→规格 优先级,**就地修正上游**。
 
-## 节奏建议
-- 一个 phase:`/ignite-analyze-phase` **一次**;然后该 phase 下每个 session 按 `session-doc → session-code` **顺序**推进(一次一个,边做边校准)。
-- 不知道做到哪了?看 `specs/PROGRESS.md` 顶部的"当前位置/下一步"。
+## 两份文档(session)
+- **执行规格** `specs/sessions/SNN-*.md`:瘦,约束 AI(范围/契约/源码导读/实现步骤/具名验收/引用附录)。
+- **学习者讲义** `docs-learn/SNN-*.md`(可选):教学法(概念图/why/陷阱/自测题/对照)。
 
-## 状态(v1)
-这套 skill **抽象自单一试点(Phase 1 NIO / S3)**,是 v1。随着做更多 phase(存储/事务/SQL…),模板与步骤会暴露需要调整的地方——做完 1~2 个 phase 后应回头修订。已知可能需要细化的点:存储 phase(B+树/WAL)的测试策略、SQL phase(H2 依赖引入)、事务 phase(并发测试)。
+## 共同纪律
+- **grounding 优先**:分析/规格靠 Explore 读 `vendors/ignite` 真实源码 + **`scripts/check-cited-paths.sh`** 机器核验;代码靠真跑 `mvn test` + 核验具名测试。不凭记忆、不自报勾选。
+- **保真**:Ignite 自写层纯 JDK;Ignite 用第三方库处同用(如 SQL→H2)。
+- **依赖锚点**:顺序主张与 roadmap §依赖锚点一致。
+- **进度同步**:每个 skill 完成后更新 `specs/PROGRESS.md`。
+
+## 节奏
+- 一个 phase:`/ignite-analyze-phase` **一次**;然后每 session 按 `session-doc → session-code` **顺序**推进。
+- 忘了做到哪?`/ignite-resume` 或看 `specs/PROGRESS.md` 顶部。
+
+## 状态(v2)
+v1 抽象自 Phase 1/S3 试点;**v2**(本次)按 grilling 加固:拆执行规格/讲义、加对外接口契约、cited-paths lint、具名测试、SoT 声明。随做更多 phase 仍需回头修订(存储/事务/SQL phase 的测试与依赖各有特点)。

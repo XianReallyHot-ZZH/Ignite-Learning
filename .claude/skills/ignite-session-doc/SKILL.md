@@ -1,32 +1,41 @@
 ---
 name: ignite-session-doc
-description: 从零手搓 Ignite 学习项目 —— 为某个 session 产出"教学文档"(stage ②)。当某 phase 已分析完、用户要"写 session 教学文档 / 教学 / 教 S?? "时使用。基于 phase 源码分析,从模板写出聚焦详细的 specs/sessions/SNN-*.md,并在 roadmap 挂链接。调用方式 /ignite-session-doc <NN>。
+description: 从零手搓 Ignite —— 为某 session 产出"执行规格"(stage ②,约束 AI 的瘦规格)。当某 phase 已分析完、用户要"写 session 文档/规格/教 S??"时使用。基于 phase 分析,从 _TEMPLATE-spec.md 产出 specs/sessions/SNN-*.md(范围/对外接口契约/源码导读/实现步骤/具名验收/引用路径附录),跑 cited-paths lint,挂 roadmap 链接。教学法另写 docs-learn/ 讲义(按需)。调用 /ignite-session-doc <NN>。
 ---
 
 # ignite-session-doc &lt;NN&gt;
 
-为 **session NN** 产出**教学文档**。
+为 **session NN** 产出**执行规格**(约束 AI 的瘦规格;教学法另写讲义,可选)。
 
 ## 前置
-该 session 所属 phase 必须已有源码分析文档(`specs/phases/PNN-*-analysis.md`)。没有则先 `/ignite-analyze-phase <N>`。
+该 session 所属 phase 已有源码分析(`specs/phases/PNN-*-analysis.md`)。没有则先 `/ignite-analyze-phase <N>`。
 
-## 在流水线中的位置
-stage ②:**分析 → [教学文档] → 代码**。按既定决策**一次只产一个 session** 教学文档(顺序出),每个尽量被前一个 session 的真实代码校准。
+## 流水线位置
+stage ②:**分析 → [执行规格] → 代码**。一次一个 session(顺序出)。
 
-## 输入
-- `<NN>`:session 编号(01–35,零填充)。在 roadmap 查该 session 块(目标/镜像源码/前置/实现要点/验收/工时)及其 phase 分析文档。
+## 唯一事实源(SoT)
+- 范围/顺序 = **roadmap 本 S 块**(权威)。
+- 拆分/grounding = **phase 分析 §6**(权威)。
+- 本执行规格 = **细化 + 对外接口契约 + 具名验收**。冲突按 roadmap→分析→规格 优先级,**就地修正上游**。
 
 ## 步骤
-1. **定位**:roadmap 中 session NN 的块 + 其 phase 分析文档(尤其 §6 拆分依据、§2 类清单、§4 设计 why)。
-2. **起草**:复制 `specs/sessions/_TEMPLATE.md` → `specs/sessions/SNN-<短名>.md`。要比 phase 分析**更聚焦更详细**:放大到本 session 的切片,给 step-by-step 构建(v1→v3)、代码骨架、`file:line` 源码导读、具体陷阱、自测题。
-3. **只引用已核验路径**:复用 phase 分析里已核验的锚点;新增的必须先核验存在。
-4. **挂链接**:在 roadmap 该 session 块末尾追加 `**教学文档**:[SNN-短名](sessions/SNN-短名.md)`。
-5. **更新进度**:`specs/PROGRESS.md` 把该 session 的"教学文档"勾 ☑。
+1. **定位**:roadmap 的 session NN 块 + phase 分析 §6 本 session 行(含 v 级)。
+2. **起草**:复制 `specs/sessions/_TEMPLATE-spec.md` → `specs/sessions/SNN-<短名>.md`,填 6 节:
+   - §1 范围与位置(标 **v 级**、显式"不做");
+   - §2 **对外接口契约**:本 session 暴露的 public 类型/方法 + 供哪个下游(来源 = 依赖 DAG **出边**);
+   - §3 源码导读(`file:line`,复用 phase 分析已核验锚点);
+   - §4 实现步骤(v1→v3);
+   - §5 **验收 = 具名测试**(每条 → `TestClass#method`);
+   - §6 **引用路径附录**(```cited-paths 块)。
+3. **防幻觉门**:跑 `scripts/check-cited-paths.sh specs/sessions/SNN-<短名>.md`,直到全 OK。
+4. **挂链接**:roadmap 本 S 块末尾加 `**教学文档**:[SNN-短名](sessions/SNN-短名.md)`。
+5. **(可选)讲义**:教学法(概念图/why/陷阱/自测题)按需另写 `docs-learn/SNN-<短名>.md`(从 `docs-learn/_TEMPLATE-handout.md`)。
+6. **更新**:`specs/PROGRESS.md` 该 session"执行规格"勾 ☑。
 
 ## 纪律
-- 范围只覆盖 phase 分析 §6 给本 session 划定的切片,不要把别的 session 的范围拉进来。
-- v1→v3 阶梯必须与 roadmap 该 session 的"实现要点"一致。
-- 验收(可运行 demo + 单测)要具体可执行。
+- 范围只覆盖 phase §6 划给本 session 的切片。
+- §2 契约必须覆盖**所有 DAG 出边**下游依赖的接口(防下游返工)。
+- §5 每条验收点名测试;§6 附录含本规格引用的全部 `vendors/ignite` 路径。
 
 ## 完成 =
-教学文档写好(聚焦详细)+ roadmap 链接挂上 + PROGRESS 更新。
+执行规格 6 节填满 + cited-paths lint 全 OK + roadmap 链接 + PROGRESS 更新。

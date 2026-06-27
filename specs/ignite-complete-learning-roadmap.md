@@ -97,27 +97,25 @@ flowchart LR
 
 ## 3. 文档与资产体系
 
-本路线不只有这一份 roadmap。文档按**用途/生命周期**分三类(避免把 roadmap 撑成不可扫读的大文档):
+本路线不只有这一份 roadmap。文档按**用途/生命周期**分类(避免把 roadmap 撑成不可扫读的大文档),并遵循**唯一事实源(SoT)**:
+- **范围/顺序** = roadmap 的 S 块(权威);**拆分/grounding** = phase 分析 §6(权威);**细化 + 对外接口契约 + 具名验收** = session 执行规格。冲突按 **roadmap → 分析 → 规格** 优先级,**就地修正上游**。
 
 | 类别 | 位置 | 职责 | 何时建 |
 |---|---|---|---|
 | **路线图** | `specs/ignite-complete-learning-roadmap.md`(本文) | 序列 + 规格 + 依赖 DAG;terse、可扫读 | 已建 |
-| **全局参考资产** | `specs/assets/*.md` | 跨 Session 复用的稳定参考 | 按需,先于用到它的 Session |
-| **每 Session 教学文档** | `specs/sessions/SNN-短名.md` | 一节课的内容(目标/概念/原理/源码导读/陷阱/思考题)+ 执行前分析(本 Session 代码落点与设计) | just-in-time,做到该 Session 时再写 |
+| **全局参考资产** | `specs/assets/*.md` | 术语表 / 源码导读 / 包结构(跨 Session 复用) | 已建 |
+| **phase 源码分析** | `specs/phases/PNN-*-analysis.md` | 该 phase 的 grounded 输入(§6 含 **v 级**拆分 + 修订记录 + 引用附录) | 每 phase 一次,先于其 session |
+| **Session 执行规格** | `specs/sessions/SNN-短名.md` | **约束 AI 的瘦规格**:范围/对外接口契约/源码导读/实现步骤/具名验收/引用附录 | 每 session,just-in-time |
+| **Session 学习者讲义** | `docs-learn/SNN-短名.md`(可选) | 教学法:概念图/why/陷阱/自测题/对照 | 按需 |
 
-**全局参考资产(待建立,路径已定):**
-- `specs/assets/glossary.md` — **术语表**:PME / DHT / near·dht·colocated / PageMemory / WAL / DiscoCache… → 通俗解释 + 源码位置。
-- `specs/assets/reading-ignite-source.md` — **源码导读 primer**:如何读 Ignite 源码 + `IgniteKernal.start()` 启动主线(`GridIoManager`@~1004、`GridDiscoveryManager`@~1016…)。
-- `specs/assets/package-layout.md` — **包结构总览**:学习者实现的目标包树(对齐 Ignite 的 `internal/util/nio`、`internal/pagemem`、`processors/cache`…),即全局代码骨架。
-- (可选)`specs/assets/testing-distributed.md` — 分布式/并发系统的测试策略。
+**防幻觉(机器可校验)**:执行规格与 phase 分析末尾都有 ` ```cited-paths ` 附录;产出后跑 `scripts/check-cited-paths.sh` 核验全部引用路径真实存在(取代自报勾选)。
 
-**关于"学习者代码骨架"**:分两层——① 全局总览在 `assets/package-layout.md`;② 每个 Session"本 Session 代码往哪写、新增哪些类"放在该 Session 教学文档的「执行前分析」章节。**不单独建第三类文档**,避免碎片化。
-
-**每 Session 教学文档约定:**
-- 路径:`specs/sessions/SNN-短名.md`(如 `S12-btree.md`、`S03-nio-engine.md`)。
-- 模板:见 `specs/sessions/_TEMPLATE.md`。
-- 建立时,在本文对应 Session 块末尾追加:`**教学文档**:[SNN-短名](sessions/SNN-短名.md)`。
-- **just-in-time**:不要预先批量写;做到某 Session 时再写——避免重蹈"先完全掌握"的幻觉(见提示词防幻觉条款)。
+**Session 执行规格约定:**
+- 路径 `specs/sessions/SNN-短名.md`;模板 `specs/sessions/_TEMPLATE-spec.md`(教学法另用 `docs-learn/_TEMPLATE-handout.md`)。
+- §2「对外接口契约」须覆盖依赖 DAG **出边**下游依赖的接口(防下游返工)。
+- §5 验收每条**点名测试**(`TestClass#method`);`/ignite-session-code` 核验其存在且绿。
+- 建立时,在本文对应 S 块末尾追加:`**教学文档**:[SNN-短名](sessions/SNN-短名.md)`。
+- **just-in-time**:做到某 Session 时再写,不预先生成。
 
 ---
 

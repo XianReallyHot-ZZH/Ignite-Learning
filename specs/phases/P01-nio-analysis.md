@@ -148,11 +148,11 @@ worker: OP_READ 就绪 → processRead(读字节进 readBuf)
 
 按 **"隔离度 × 复杂度"递增**,每步都有可运行产物 + 单测:
 
-| Session | 范围(本 phase 内) | 镜像要点 | 可运行验收 |
-|---|---|---|---|
-| **S3 v1** | 单 selector worker + `GridNioSession` + **长度前缀帧**(`GridBufferedParser` 路线) | `GridNioServer` 核心、单 worker、`processRead/Write`、简单 codec | 两个 JVM echo,单测覆盖粘包/半包 |
-| **S4 v2** | 多 worker(`offerBalanced` 轮询/奇偶)+ **完整过滤链**(`GridNioFilterChain` 双向 + `HeadFilter`/`TailFilter`) | worker 模型、filter chain 双向、可插拔 filter | 多连接并发压测不串号 |
-| **S5 v3** | **Recovery**(`GridNioRecoveryDescriptor` 计数器去重 + `resend`)+ **双重背压**(发送信号量 + 接收 `GridNioMessageTracker` 暂停/恢复)+ SSL 留接口 | recovery 状态机、背压两端 | 断线重连后消息不丢不重 |
+| Session | v级 | 范围(本 phase 内) | 镜像要点 | 可运行验收 |
+|---|---|---|---|---|
+| **S3** | v1 | 单 selector worker + `GridNioSession` + **长度前缀帧**(`GridBufferedParser` 路线) | `GridNioServer` 核心、单 worker、`processRead/Write`、简单 codec | 两个 JVM echo,单测覆盖粘包/半包 |
+| **S4** | v2 | 多 worker(`offerBalanced` 轮询/奇偶)+ **完整过滤链**(`GridNioFilterChain` 双向 + `HeadFilter`/`TailFilter`) | worker 模型、filter chain 双向、可插拔 filter | 多连接并发压测不串号 |
+| **S5** | v3 | **Recovery**(`GridNioRecoveryDescriptor` 计数器去重 + `resend`)+ **双重背压**(发送信号量 + 接收 `GridNioMessageTracker` 暂停/恢复)+ SSL 留接口 | recovery 状态机、背压两端 | 断线重连后消息不丢不重 |
 
 **为什么这么切**:v1 给"最小可运行"(先吃透 selector+会话+帧);v2 引入并发与可扩展性(worker 模型 + 过滤链);v3 引入可靠性(recovery + 背压)。每一步都是上一层的自然深化,且**任一步停下都有可运行成果**——符合北辰式 + 保真阶梯。
 
@@ -176,10 +176,44 @@ worker: OP_READ 就绪 → processRead(读字节进 readBuf)
 
 ## 8. 自检
 
-- [x] **引用路径全部存在**:本文引用的 25 条路径/类已核验 OK(含 `nio/` 全部新类 + `spi/communication/tcp/internal/` 消费者 + `Message` 接口)。
+- [x] **引用路径**:`scripts/check-cited-paths.sh` 对本文档全 OK(25 条,见 §10 附录)。
 - [x] **依赖主张与锚点一致**:NIO 无集群依赖,消费者是 SPI(单向)——与 roadmap 依赖锚点"持久化隔离 / NIO 是通信根"一致。
-- [x] **覆盖 S3/S4/S5**:§6 给出拆分依据,三者加起来 = Phase 1 全部(NIO v1→v3)。
-- [x] **每步可运行可测**:S3 echo / S4 多连接压测 / S5 断线重连不丢不重,均有明确验收。
+- [x] **§6 每个 session 标了 v 级**(S3=v1 / S4=v2 / S5=v3)。
+- [x] **覆盖 S3/S4/S5**:三者加起来 = Phase 1 全部(NIO v1→v3)。
+- [x] **每步可运行可测**:S3 echo / S4 多连接压测 / S5 断线重连不丢不重。
 - [x] **CS 学生曲线**:S3 用最简长度前缀帧(非 direct 协议)降低门槛;复杂度逐层加。
 
-> 本文档同时作为 **phase-analysis 模板**的样例。若形态通过审阅,我将抽取为 `specs/phases/_TEMPLATE-analysis.md`。
+## 9. 修订记录
+
+> session 代码若证伪本分析,在此回填并就地修正正文。
+- 2026-06-27:S3/S4 已落地跑绿,与本文 §2/§3/§4 一致,无需修订。
+
+## 10. 引用路径(lint 核验对象)
+
+```cited-paths
+internal/util/nio/GridNioServer.java
+internal/util/nio/GridNioServerListener.java
+internal/util/nio/GridNioWorker.java
+internal/util/nio/GridNioSession.java
+internal/util/nio/GridNioSessionImpl.java
+internal/util/nio/GridSelectorNioSessionImpl.java
+internal/util/nio/GridNioKeyAttachment.java
+internal/util/nio/GridNioFilter.java
+internal/util/nio/GridNioFilterAdapter.java
+internal/util/nio/GridNioFilterChain.java
+internal/util/nio/GridNioCodecFilter.java
+internal/util/nio/GridNioParser.java
+internal/util/nio/GridBufferedParser.java
+internal/util/nio/GridDirectParser.java
+internal/util/nio/GridNioServerBuffer.java
+internal/util/nio/GridNioRecoveryDescriptor.java
+internal/util/nio/GridNioMessageTracker.java
+internal/util/nio/GridNioBackPressureControl.java
+internal/util/nio/SelectedSelectionKeySet.java
+internal/util/nio/ssl/GridNioSslFilter.java
+internal/util/nio/ssl/GridNioSslHandler.java
+spi/communication/tcp/TcpCommunicationSpi.java
+spi/communication/tcp/internal/GridNioServerWrapper.java
+spi/communication/tcp/internal/ConnectionKey.java
+plugin/extensions/communication/Message.java
+```
