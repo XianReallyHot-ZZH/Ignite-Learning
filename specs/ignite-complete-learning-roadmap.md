@@ -106,11 +106,12 @@ flowchart LR
 | **全局参考资产** | `specs/assets/*.md` | 术语表 / 源码导读 / 包结构(跨 Session 复用) | 已建 |
 | **phase 源码分析** | `specs/phases/PNN-*-analysis.md` | 该 phase 的 grounded 输入(§6 含 **v 级**拆分 + 修订记录 + 引用附录) | 每 phase 一次,先于其 session |
 | **Session 执行规格** | `specs/sessions/SNN-短名.md` | **约束 AI 的瘦规格**:范围/对外接口契约/源码导读/实现步骤/具名验收/引用附录 | 每 session,just-in-time |
-| **Session 学习者讲义** | `docs-learn/SNN-短名.md`(可选) | 教学法:概念图/why/陷阱/自测题/对照 | 按需 |
+| **Session 学习者讲义** | `docs-learn/SNN-短名.md`(**必写**) | 教学法:概念图/why/陷阱/自测题/对照 | 每 session,与执行规格同产 |
 | **里程碑基准报告** | `specs/benchmarks/M?-report.md` | 与 Ignite 的**功能一致性 + 性能基准 + 差距分析**(Ignite 为 oracle) | 每里程碑,**☑ 前置** |
 
 **防幻觉(机器可校验)**:执行规格与 phase 分析末尾都有 ` ```cited-paths ` 附录;产出后跑 `scripts/check-cited-paths.sh` 核验全部引用路径真实存在(取代自报勾选)。
 **里程碑门(机器可校验)**:里程碑 ☑ 前置 = 产出 `specs/benchmarks/M?-report.md` 且 `scripts/check-milestone-report.sh` 通过(功能一致性 + 性能 ≥3 workload + 差距分析 + 自检全勾;方法见 `specs/assets/benchmarking-against-ignite.md`)。
+**讲义门(机器可校验)**:每个执行规格都要有同名讲义 `docs-learn/SNN-*.md`(讲义必写);`scripts/check-handouts.sh` 把关。
 
 **Session 执行规格约定:**
 - 路径 `specs/sessions/SNN-短名.md`;模板 `specs/sessions/_TEMPLATE-spec.md`(教学法另用 `docs-learn/_TEMPLATE-handout.md`)。

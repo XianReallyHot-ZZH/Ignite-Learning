@@ -23,6 +23,7 @@ description: 从零手搓 Ignite 学习项目 —— 恢复/进入工作状态,�
 - 进度以 `PROGRESS.md` 为准;若它与 git/实际文件不一致,**以实际为准并修正 PROGRESS**。
 - 建议下一步时给出**确切的 skill + 参数**(别只说"继续做 S5")。
 - **里程碑 ☑ 前置**:触发 session(S15/S21/S23/S25/S29/S32/S35)完成后,必须产出 `specs/benchmarks/M?-report.md` 且 `scripts/check-milestone-report.sh` 通过,才能在 PROGRESS 勾里程碑 ☑。报告缺/门未过 = 当前阻塞项,要标红提醒。
+- **讲义门**:跑 `scripts/check-handouts.sh`;有 MISS(某 session 讲义缺失/过薄)→ 标红提醒补讲义(讲义必写)。
 - 不要顺手开干——先汇报 + 确认,除非用户明确说"直接继续"。
 
 ## 完成 =

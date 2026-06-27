@@ -12,7 +12,7 @@
 - `specs/PROGRESS.md` —— 进度状态(roadmap = 计划,PROGRESS = 状态)。
 - `specs/phases/` —— phase 源码分析(模板 `_TEMPLATE-analysis.md`)。
 - `specs/sessions/` —— **执行规格**(模板 `_TEMPLATE-spec.md`:约束 AI 的瘦规格 + 具名测试 + 引用附录)。
-- `docs-learn/` —— 学习者讲义(模板 `_TEMPLATE-handout.md`:教学法,可选)。
+- `docs-learn/` —— 学习者讲义(模板 `_TEMPLATE-handout.md`:教学法,**必写**,`scripts/check-handouts.sh` 把关)。
 - `specs/assets/` —— 全局资产(术语表 / 源码导读 / 包结构)。
 - `ignite-gogogo/sNN-<短名>/` —— 每个 Session 一个**独立多模块 Maven** 工程(父 pom + core 子模块)。
 - `scripts/check-cited-paths.sh` —— 引用路径 lint(防幻觉门)。
@@ -36,6 +36,7 @@
 - **grounding**:分析/规格靠 Explore 读 `vendors/ignite` 真实源码 + **`scripts/check-cited-paths.sh`** 机器核验(不凭记忆、不自报勾选);代码靠**真跑** `mvn -f ignite-gogogo/sNN-*/pom.xml test` 见 `BUILD SUCCESS`,且 §5 具名测试全部存在且绿。
 - **依赖锚点 / 包结构**:见 `specs/assets/reading-ignite-source.md`、`specs/assets/package-layout.md`;Java 根包 `org.apache.ignite.learning.*`。
 - **里程碑门**:到达 M1~M7 时产出 `specs/benchmarks/M?-report.md`(与 Ignite 的**功能 + 性能**基准对比,方法见 `specs/assets/benchmarking-against-ignite.md`);`scripts/check-milestone-report.sh` 通过才许在 PROGRESS 勾里程碑 ☑。
+- **讲义门**:每个 session 执行规格都要有配套讲义(`docs-learn/SNN-*.md`,**必写**),`scripts/check-handouts.sh` 把关。
 - **工具链**:Java 21 + Maven 3.9.6。`.gitignore` 已忽略 `target/`。
 
 ## 会话结束前

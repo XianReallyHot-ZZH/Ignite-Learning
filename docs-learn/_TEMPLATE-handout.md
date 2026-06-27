@@ -1,7 +1,7 @@
 # [SNN-短名] · 学习者讲义(handout)
 
 > **教学法**(给人看)。**执行约束以执行规格 `specs/sessions/SNN-短名.md` 为准**;本讲义不影响 AI 执行。
-> 可选,按需写(并非每个 session 都需要)。
+> **必写**(每个有执行规格的 session 都要有讲义);写完跑 `scripts/check-handouts.sh`。
 
 **Session**:SNN · <标题>  **Phase**:Phase N · <子系统>
 

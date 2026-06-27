@@ -27,15 +27,16 @@ stage ②:**分析 → [执行规格] → 代码**。一次一个 session(顺序
    - §4 实现步骤(v1→v3);
    - §5 **验收 = 具名测试**(每条 → `TestClass#method`);
    - §6 **引用路径附录**(```cited-paths 块)。
-3. **防幻觉门**:跑 `scripts/check-cited-paths.sh specs/sessions/SNN-<短名>.md`,直到全 OK。
+3. **门(防幻觉 + 讲义)**:跑 `scripts/check-cited-paths.sh specs/sessions/SNN-<短名>.md` 直到全 OK;**讲义写完后**跑 `scripts/check-handouts.sh`(讲义必写)。
 4. **挂链接**:roadmap 本 S 块末尾加 `**教学文档**:[SNN-短名](sessions/SNN-短名.md)`。
-5. **(可选)讲义**:教学法(概念图/why/陷阱/自测题)按需另写 `docs-learn/SNN-<短名>.md`(从 `docs-learn/_TEMPLATE-handout.md`)。
+5. **讲义(必写)**:教学法(概念图/why/陷阱/自测题)写 `docs-learn/SNN-<短名>.md`(从 `docs-learn/_TEMPLATE-handout.md`)——讲义**非可选**,每个 session 必须有。
 6. **更新**:`specs/PROGRESS.md` 该 session"执行规格"勾 ☑。
 
 ## 纪律
 - 范围只覆盖 phase §6 划给本 session 的切片。
 - §2 契约必须覆盖**所有 DAG 出边**下游依赖的接口(防下游返工)。
 - §5 每条验收点名测试;§6 附录含本规格引用的全部 `vendors/ignite` 路径。
+- **讲义必写**:配套 `docs-learn/SNN-*.md` 不能缺(`scripts/check-handouts.sh` 把关)。
 
 ## 完成 =
-执行规格 6 节填满 + cited-paths lint 全 OK + roadmap 链接 + PROGRESS 更新。
+执行规格 6 节填满 + 配套讲义 + cited-paths lint 全 OK + check-handouts 过 + roadmap 链接 + PROGRESS 更新。
