@@ -21,7 +21,7 @@ stage ③:**分析 → 执行规格 → [代码 → 注释 → 讲义]**。讲�
 4. **跑绿**:`mvn -f ignite-gogogo/sNN-<短名>/pom.xml test`,直到 BUILD SUCCESS、0 失败。
 5. **核验具名测试**:规格 §5 点名的每个测试类/方法**必须存在于 src/test 且在通过集**;缺失/未绿即视为未达标,回去补。
 6. **补注释**(代码绿后再补,见下"注释纪律"):类 Javadoc + 关键行内 + 方法 Javadoc;补完**再跑一次 `mvn test`** 确认纯注释(没误改代码)。
-7. **写讲义**(代码完成后,描述实际产物):复制 `docs-learn/_TEMPLATE-handout.md` → `docs-learn/SNN-<短名>.md`,据**实际代码**填:教学目标 / 核心概念(机制)/ **核心类设计与架构(classDiagram 描真实类)** / **核心链路(sequenceDiagram 描真实调用)** / 关键原理 / 常见陷阱(实际踩到的) / 自测题 / 与 Ignite 对照(真实差距)。写完跑 `scripts/check-handouts.sh`。
+7. **写讲义**(代码完成后,描述实际产物):复制 `docs-learn/_TEMPLATE-handout.md` → `docs-learn/SNN-<短名>.md`,据**实际代码**填:教学目标 / 核心概念(机制)/ **核心类设计与架构(classDiagram 描真实类)** / **核心链路(sequenceDiagram 描真实调用)** / 关键原理 / 常见陷阱(实际踩到的) / 自测题 / 与 Ignite 对照(真实差距)。写完跑 `scripts/check-handouts.sh`。**"与 Ignite 对照"里标"不做/选做"且无下游 session 的 → 顺手加一行到 `specs/deferred.md`(out-of-scope backlog)。**
 8. **更新**:`specs/PROGRESS.md` 该 session"代码/测试/讲义"勾 ☑ + 记录"N passed"。不提交 `target/`(已 .gitignore)。
 
 ## 纪律
