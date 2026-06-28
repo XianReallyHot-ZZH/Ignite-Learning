@@ -81,8 +81,11 @@ class MultiWorkerEchoTest {
                 for (int i = 0; i < perConn; i++) {
                     expected.add("c" + c + "-m" + i);
                 }
+                System.out.println("got list: " + got);
+                System.out.println("expected list: " + expected);
                 assertEquals(expected, got, "conn " + c + " echo mismatch / cross-talk");
             }
+            System.out.println("workerIds: " + workerIds);
             // 8 连接应被分散到 ≥2 个 worker(若是 1 个,Balancer 没生效)
             assertTrue(workerIds.size() >= 2, "connections should spread across >=2 workers, got " + workerIds);
         } finally {
