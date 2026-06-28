@@ -23,7 +23,7 @@ ignite-gogogo/                                # 所有 Session 工程的容器
 
 > - **模块划分对齐 Ignite**:早期 Session 只需 `core` 子模块;后期(引入 SQL 等)再按 Ignite 风格新增 feature 子模块(如 `indexing`)。
 > - **对照参考**:每个工程内的 Java 包根 `org/apache/ignite/learning/` 对照 `vendors/ignite/modules/core/src/main/java/org/apache/ignite/`。下文 §2 的"对应 Ignite"列即指此根下的相对路径。
-> - 详细包 ↔ Ignite ↔ Session 映射见 §2;每个 Session 的具体代码骨架落点见其教学文档「执行前分析」。
+> - 详细包 ↔ Ignite ↔ Session 映射见 §2;每个 Session 的具体代码骨架落点见其执行规格 §1(范围与位置)。
 
 ## 2. 包 ↔ Ignite ↔ Session 映射
 
@@ -102,6 +102,6 @@ ignite-gogogo/                                # 所有 Session 工程的容器
 ## 3. 使用方式
 
 1. **建工程**:开始一个 Session 时,在 `ignite-gogogo/` 下建 `sNN-短名/`——通常**复制上一 Session 的工程目录**作为起点(第一个 Session 从零建父 pom + `core`)。增量就落在这些独立工程上。
-2. **执行前分析**:在本 Session 教学文档里,明确"本次在 §2 哪个包新增/修改哪些类"——即代码骨架落点。
+2. **执行前分析**:在本 Session 执行规格里,明确"本次在 §2 哪个包新增/修改哪些类"——即代码骨架落点。
 3. **对照阅读**:写到 `learning/internal/pagemem/PageMemory.java` 时,并行打开 `vendors/.../internal/pagemem/PageMemory.java` 对照设计(不是抄)。
 4. **渐进生长**:`GridKernalContext` / `IgniteKernal` 这种"接线"类会随 Session 增多逐步填充——别一开始就写满,用到谁加谁(随工程复制带到后续 Session)。

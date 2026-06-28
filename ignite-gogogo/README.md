@@ -24,6 +24,6 @@ sNN-短名/
 - 学习路线与 Session 列表:`specs/ignite-complete-learning-roadmap.md`
 - 包 ↔ Ignite ↔ Session 映射:`specs/assets/package-layout.md`
 - 术语表 / 源码导读 primer:`specs/assets/`
-- 各 Session 教学文档:`specs/sessions/SNN-短名.md`
+- 各 Session 执行规格:`specs/sessions/SNN-短名.md`
 
 > 目前为空:第一个工程由 **S1(项目骨架)** 创建为 `s01-skeleton/`。

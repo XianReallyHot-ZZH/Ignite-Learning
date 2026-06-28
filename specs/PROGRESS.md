@@ -1,7 +1,7 @@
 # 进度清单(PROGRESS)
 
 > 本文件是**活的进度追踪**:`ignite-complete-learning-roadmap.md` 是"计划",本文件是"状态"。
-> 每完成一个产物(分析文档 / 教学文档 / 代码工程 / 测试)就更新对应行;将来由 skill 自动维护。
+> 每完成一个产物(分析文档 / 执行规格 / 讲义 / 代码工程 / 测试)就更新对应行;将来由 skill 自动维护。
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
@@ -12,7 +12,7 @@
 ## 基础设施(已建立)
 - ☑ roadmap + 依赖 DAG + 文档体系(`specs/ignite-complete-learning-roadmap.md`)
 - ☑ 全局资产:glossary / reading-ignite-source / package-layout(`specs/assets/`)
-- ☑ 教学文档模板(`specs/sessions/_TEMPLATE.md`)
+- ☑ 执行规格模板(`_TEMPLATE-spec.md`)+ 讲义模板(`docs-learn/_TEMPLATE-handout.md`)
 - ☑ phase 分析模板(`specs/phases/_TEMPLATE-analysis.md`)
 - ☑ 代码工程约定(`ignite-gogogo/`,每 Session 独立多模块工程)
 

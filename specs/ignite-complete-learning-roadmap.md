@@ -117,7 +117,7 @@ flowchart LR
 - 路径 `specs/sessions/SNN-短名.md`;模板 `specs/sessions/_TEMPLATE-spec.md`(教学法另用 `docs-learn/_TEMPLATE-handout.md`)。
 - §2「对外接口契约」须覆盖依赖 DAG **出边**下游依赖的接口(防下游返工)。
 - §5 验收每条**点名测试**(`TestClass#method`);`/ignite-session-code` 核验其存在且绿。
-- 建立时,在本文对应 S 块末尾追加:`**教学文档**:[SNN-短名](sessions/SNN-短名.md)`。
+- 建立时,在本文对应 S 块末尾追加:`**执行规格**:[SNN-短名](sessions/SNN-短名.md)`。
 - **just-in-time**:做到某 Session 时再写,不预先生成。
 
 ---
@@ -138,7 +138,7 @@ flowchart LR
 - **验收**:demo = `mvn test` 全绿;单测覆盖 `HelloTest`。
 - **难度 / 工时**:⭐ / 0.5 天。
 - **产出物**:可编译可测试的多模块骨架。
-- **教学文档**:[S01-skeleton](sessions/S01-skeleton.md)
+- **执行规格**:[S01-skeleton](sessions/S01-skeleton.md)
 
 ### Session 2(S2)— Java 并发与 NIO 热身
 - **Phase / 子系统**:Phase 0 / 语言基础
@@ -151,7 +151,7 @@ flowchart LR
 - **验收**:demo = echo server 两端跑通;单测覆盖帧编解码与线程池行为。
 - **难度 / 工时**:⭐⭐ / 2~3 天。
 - **产出物**:echo server 原型 + 并发笔记。
-- **教学文档**:[S02-nio-warmup](sessions/S02-nio-warmup.md)
+- **执行规格**:[S02-nio-warmup](sessions/S02-nio-warmup.md)
 
 ---
 
@@ -168,7 +168,7 @@ flowchart LR
 - **验收**:demo = 两个 JVM 用 NioServer 互发结构化消息;单测覆盖帧的粘包/半包。
 - **难度 / 工时**:⭐⭐⭐ / 3~5 天。
 - **产出物**:`NioServer` v1。
-- **教学文档**:[S03-nio-engine](sessions/S03-nio-engine.md)
+- **执行规格**:[S03-nio-engine](sessions/S03-nio-engine.md)
 
 ### Session 4(S4)— NIO 引擎 v2:多 worker + 过滤链
 - **镜像源码**:`.../internal/util/nio/GridNioWorker.java`、`GridNioFilterChain.java`、`GridSelectorNioSessionImpl.java`。
@@ -179,7 +179,7 @@ flowchart LR
 - **验收**:demo = 多连接并发压测不串号;单测覆盖多 worker 下的消息顺序与背压写缓冲。
 - **难度 / 工时**:⭐⭐⭐⭐ / 5~7 天。
 - **产出物**:`NioServer` v2(后续 Communication 的传输根)。
-- **教学文档**:[S04-nio-v2](sessions/S04-nio-v2.md)
+- **执行规格**:[S04-nio-v2](sessions/S04-nio-v2.md)
 
 ### Session 5(S5)— NIO 引擎 v3:恢复 + 背压
 - **镜像源码**:`.../internal/util/nio/`(recovery descriptor、SSL filter 相关类)。
@@ -190,7 +190,7 @@ flowchart LR
 - **验收**:单测覆盖断线重连后消息不丢不重;demo = kill -9 一个 worker 后恢复。
 - **难度 / 工时**:⭐⭐⭐⭐ / 4~6 天。
 - **产出物**:生产级可用的 NIO 引擎。
-- **教学文档**:[S05-nio-v3](sessions/S05-nio-v3.md)
+- **执行规格**:[S05-nio-v3](sessions/S05-nio-v3.md)
 
 ---
 

@@ -59,4 +59,4 @@
 internal/.../<Class>.java
 ```
 
-> 写完后:据此**顺序产出**各 session 执行规格(`specs/sessions/SNN-<短名>.md`,从 `_TEMPLATE-spec.md`),并在 roadmap 对应 S 块挂 `**教学文档**:` 链接。
+> 写完后:据此**顺序产出**各 session 执行规格(`specs/sessions/SNN-<短名>.md`,从 `_TEMPLATE-spec.md`),并在 roadmap 对应 S 块挂 `**执行规格**:` 链接。

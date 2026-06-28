@@ -2,7 +2,7 @@
 
 从零手搓 Ignite · **S4**:多 selector worker + 轮询 Balancer + 双向过滤链(镜像 `vendors/ignite` 的 `internal/util/nio/`)。从 `s03-nio-engine` 复制扩展。
 
-- 教学文档:`specs/sessions/S04-nio-v2.md`
+- 执行规格:`specs/sessions/S04-nio-v2.md`
 - 驱动分析:`specs/phases/P01-nio-analysis.md`
 
 ## 构建 / 测试

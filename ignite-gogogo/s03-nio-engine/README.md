@@ -2,7 +2,7 @@
 
 从零手搓 Ignite · **S3**:单 selector worker + 会话 + 长度前缀帧(镜像 `vendors/ignite` 的 `internal/util/nio/`)。
 
-- 教学文档:`specs/sessions/S03-nio-engine.md`
+- 执行规格:`specs/sessions/S03-nio-engine.md`
 - 驱动分析:`specs/phases/P01-nio-analysis.md`
 
 ## 构建 / 测试

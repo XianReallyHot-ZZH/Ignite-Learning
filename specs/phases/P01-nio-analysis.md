@@ -1,6 +1,6 @@
 # Phase 1 · 源码分析:NIO 引擎(镜像 `internal/util/nio/`)
 
-> 本文档是 **phase 源码分析**层产物(见 roadmap §3 文档体系),为 Phase 1 的 Session 教学文档(S3~S5)提供 grounded 输入。
+> 本文档是 **phase 源码分析**层产物(见 roadmap §3 文档体系),为 Phase 1 的 Session 执行规格(S3~S5)提供 grounded 输入。
 > 参考实现:`vendors/ignite/modules/core/src/main/java/org/apache/ignite/internal/util/nio/`(下称 `nio/`)。
 > **所有引用路径/类名均已核验存在**(25 条 OK,见 §8)。行号为 2.18.0 锚点,供对照阅读,非强约束。
 

@@ -1,5 +1,7 @@
 # Ignite 学习路线生成 · 提示词(经 /grill-me 三轮验证定稿)
 
+> ⚠ **已过时(v1 时代)**:本提示词描述的是 v1 pipeline(单份教学文档、同一份代码库、无 lint/契约/门)。当前 pipeline 以 **skills(`.claude/skills/`)+ CLAUDE.md + roadmap §3** 为准(执行规格+讲义分离、独立工程、cited-paths/check-handouts/里程碑门、注释纪律、API 契约)。仅留作历史参考。
+
 > 本文件是生成 `specs/ignite-complete-learning-roadmap.md` 的**源提示词**,可直接复用/迭代。
 > 设计依据见同级目录的 roadmap 文档头部「范围与保真规则」与「设计决策」小节。
 

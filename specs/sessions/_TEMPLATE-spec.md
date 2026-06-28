@@ -1,8 +1,8 @@
 # [SNN-短名] · 执行规格(execution spec)
 
-> **约束 AI 执行的硬规格**(瘦)。教学法(概念图 / why / 陷阱 / 自测题 / 对照)放讲义 `docs-learn/SNN-短名.md`(按需,可选)。
+> **约束 AI 执行的硬规格**(瘦)。教学法(概念图 / why / 陷阱 / 自测题 / 对照)放讲义 `docs-learn/SNN-短名.md`(必写,由 session-code 建后产)。
 > **唯一事实源**:范围/顺序看 roadmap 本 S 块;拆分/grounding 看 phase 分析 §6;本规格 = **细化 + 契约 + 验收**。
-> 复制本文件为 `specs/sessions/SNN-短名.md`。写完:**跑 `scripts/check-cited-paths.sh specs/sessions/SNN-短名.md`**,并在 roadmap 本 S 块挂 `**教学文档**:` 链接。
+> 复制本文件为 `specs/sessions/SNN-短名.md`。写完:**跑 `scripts/check-cited-paths.sh specs/sessions/SNN-短名.md`**,并在 roadmap 本 S 块挂 `**执行规格**:` 链接。
 
 **Session**:SNN · <标题>  **Phase**:Phase N · <子系统>  **v 级**:v1/v2/v3  **里程碑**:通向 M?
 

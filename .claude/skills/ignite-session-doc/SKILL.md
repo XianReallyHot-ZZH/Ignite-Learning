@@ -28,7 +28,7 @@ stage ②:**分析 → [执行规格] → 代码 → 讲义**。一次一个 ses
    - §5 **验收 = 具名测试**(每条 → `TestClass#method`);
    - §6 **引用路径附录**(```cited-paths 块)。
 3. **防幻觉门**:跑 `scripts/check-cited-paths.sh specs/sessions/SNN-<短名>.md` 直到全 OK。
-4. **挂链接**:roadmap 本 S 块末尾加 `**教学文档**:[SNN-短名](sessions/SNN-短名.md)`。
+4. **挂链接**:roadmap 本 S 块末尾加 `**执行规格**:[SNN-短名](sessions/SNN-短名.md)`。
 5. **更新**:`specs/PROGRESS.md` 该 session"执行规格"勾 ☑。
 
 ## 纪律
