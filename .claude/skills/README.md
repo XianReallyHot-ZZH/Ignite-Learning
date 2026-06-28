@@ -36,6 +36,7 @@
 - **进度同步**:每个 skill 完成后更新 `specs/PROGRESS.md`。
 - **里程碑门**:M1~M7 的 ☑ 前置 = 产出 `specs/benchmarks/M?-report.md`(功能一致性 + 性能对比 Ignite)+ `scripts/check-milestone-report.sh` 通过(方法见 `specs/assets/benchmarking-against-ignite.md`)。
 - **讲义门**:讲义由 session-code 在代码完成后产出(描述实际产物);`scripts/check-handouts.sh` 把关。
+- **out-of-scope backlog**:讲义"与 Ignite 对照"中标"不做/选做"且无下游 session → 加一行到 `specs/deferred.md`(session-code step 7)。
 
 ## 节奏
 - 一个 phase:`/ignite-analyze-phase` **一次**;然后每 session 按 `session-doc → session-code` **顺序**推进。

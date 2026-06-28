@@ -10,6 +10,7 @@
 - `vendors/ignite` —— 参考实现(tag 2.18.0)。**只读对照,不要在编译期 import 它**;是"复现"不是"调用"。
 - `specs/ignite-complete-learning-roadmap.md` —— 总路线(35 Session + 依赖 DAG + 文档体系)。
 - `specs/PROGRESS.md` —— 进度状态(roadmap = 计划,PROGRESS = 状态)。
+- `specs/deferred.md` —— 延后/未做功能清单(Ignite 有、学习版跳过的;out-of-scope backlog)。
 - `specs/phases/` —— phase 源码分析(模板 `_TEMPLATE-analysis.md`)。
 - `specs/sessions/` —— **执行规格**(模板 `_TEMPLATE-spec.md`:约束 AI 的瘦规格 + 具名测试 + 引用附录)—— session-doc 产(建前)。
 - `docs-learn/` —— 学习者讲义(模板 `_TEMPLATE-handout.md`:教学法,**由 session-code 建后产**,描述实际产物)。
