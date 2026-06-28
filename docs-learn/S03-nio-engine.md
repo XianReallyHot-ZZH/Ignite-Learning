@@ -26,6 +26,43 @@
 - **长度前缀帧**:每条消息 = `[4 字节大端长度][载荷]`;接收侧维护"先凑齐 4 字节长度 → 再按长度凑齐载荷"状态机。
 - **pull-based 写**:`send(msg)` 只入队 + 标记需要写;真正 `channel.write` 在 worker 线程、由 `OP_WRITE` 就绪驱动。
 
+## 核心类设计与架构
+
+```mermaid
+classDiagram
+    class NioServer {
+      -Selector selector
+      -NioServerListener listener
+      +send(NioSession, byte[])
+      +start() / stop()
+    }
+    class NioSession {
+      -SocketChannel ch
+      -SelectionKey key
+      -writeQueue
+      -FrameCodec.Decoder decoder
+    }
+    class FrameCodec {
+      +encode(byte[]) ByteBuffer
+      +class Decoder
+    }
+    class NioServerListener {
+      <<interface>>
+      +onMessage(ses, byte[])
+    }
+    NioServer *-- NioSession : 每连接一个
+    NioSession *-- FrameCodec : 持一个 Decoder
+    NioServer ..> FrameCodec : 用 encode
+    NioServer ..> NioServerListener : 持有/回调
+```
+
+| 类 | 职责 | 设计意图(为什么单独成类) |
+|---|---|---|
+| `NioServer` | 单 worker 主循环(accept+read+write)+ 生命周期 + 对外 `send` | 集中"一个线程管所有连接"的 NIO 逻辑(v2 会拆出 accept / worker) |
+| `NioSession` | 单连接状态(写队列 + 帧解码器 + meta) | 每连接一份有状态(解码器跨 read 保留半包);会话内串行无锁 |
+| `FrameCodec`(+`Decoder`) | 长度前缀帧编解码(无状态 encode / 有状态 Decoder) | 编解码与 IO 分离;Decoder 有状态,故内聚成类、每会话一个 |
+| `NioServerListener` | 业务回调契约(`onMessage` 等) | 消费者(下游)只依赖此接口,不耦合 NIO 内部 |
+
 ## 关键原理(为什么)
 - **为什么单 worker 先做**:隔离并发复杂度,先把"selector 主循环 + 会话 + 帧"吃透;多 worker 是 S4 的增量。
 - **为什么写是 pull-based(`send0` 不直接写)**:

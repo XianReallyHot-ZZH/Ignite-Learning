@@ -24,6 +24,59 @@
 ### SSL 槽
 `SslFilter` 占位(直通);真实实现需 `SSLEngine` + 握手 + `unwrap`/`wrap`,留后续。
 
+## 核心类设计与架构
+> v3 在 v2(NioServer/ClientWorker/FilterChain/filters)基础上新增 recovery + 双背压;下图聚焦 **v3 新增/变化**的类与关系。
+
+```mermaid
+classDiagram
+    class NioSession {
+      -BoundedWriteQueue writeQueue
+      -RecoveryDescriptor recoveryDesc
+      -MessageTracker tracker
+      +pauseReads()/resumeReads()
+    }
+    class HeadFilter {
+      onOutbound: recovery 记录
+    }
+    class ClientWorker {
+      标记 message-thread
+      read 接 MessageTracker
+    }
+    class RecoveryDescriptor {
+      sentCnt/acked/rcvCnt
+      +add/onHandshake/resend
+    }
+    class BoundedWriteQueue {
+      -Semaphore sem
+      +offer/poll 对称 bypass
+    }
+    class MessageTracker {
+      +onReceived/onProcessed
+    }
+    class GridBackPressureControl {
+      message-thread 标记
+    }
+    class SslFilter
+    NioSession *-- BoundedWriteQueue : 发送背压
+    NioSession *-- RecoveryDescriptor : 可选,recovery
+    NioSession *-- MessageTracker : 可选,接收背压
+    HeadFilter ..> RecoveryDescriptor : 出站记录未确认
+    ClientWorker ..> GridBackPressureControl : 标记本线程
+    ClientWorker ..> MessageTracker : read 前后 on/off
+    SslFilter ..> Filter : 占位,直通
+```
+
+| 类(v3 新增 / 变化) | 职责 | 设计意图(为什么这么切) |
+|---|---|---|
+| `NioSession`(v3) | 写队列改 `BoundedWriteQueue`;加可选 `RecoveryDescriptor`/`MessageTracker` + pause/resume | 背压/recovery 状态天然属于"单连接",挂在会话上 |
+| `HeadFilter`(v3) | 出站时若启用 recovery 记录未确认;溢出 → 触发重连 | recovery 记录发生在"消息即将上 wire"那一刻,HeadFilter 是唯一终结点 |
+| `ClientWorker`(v3) | 启动标记 message-thread;read 接 MessageTracker;write 用 pollFuture 释放信号量 | worker 是"消息处理线程",旁路 + tracker 接入都集中在它 |
+| `RecoveryDescriptor` | 每 connection 计数器 + 有界未确认队列 + resend/release | "断线重连重发"状态封装成独立对象,S20 拥有并接入 |
+| `BoundedWriteQueue` | 有界队列 + 信号量 + 对称 bypass | 发送背压逻辑内聚,与 worker/session 解耦 |
+| `MessageTracker` | 在途计数 + 达限 pause / 低于限 resume | 接收背压独立成类,回调式(PauseResume)接入便于测试 |
+| `GridBackPressureControl` | ThreadLocal 标记 message-thread | 旁路信号量的判据;极简独立,便于复用 |
+| `SslFilter` | SSL 占位(直通) | 预留链位置;真实实现需 SSLEngine |
+
 ## 关键原理(为什么)
 - **为什么用计数器而非 per-message 去重集**:重连时双方用"已收数"对齐,天然只重发缺失的;无需存"已见消息"集合(省内存、O(1))。小演算:发 m1,m2,m3;对方收到 m1,m2(rcvCnt=2);断线;握手对方说"我收到 2" → 发送方丢 m1,m2,重发 m3;对方收 m3 → 共 m1,m2,m3,**无重复**。
 - **为什么需要两套背压**:发送端防"本端写爆"(队列无界会 OOM);接收端防"对端灌爆"(本端来不及处理)。只做一侧,另一侧失控。

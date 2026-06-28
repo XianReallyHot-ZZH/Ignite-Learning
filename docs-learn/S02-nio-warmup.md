@@ -17,6 +17,24 @@
 - **`Selector` / `Channel` / `ByteBuffer`**:NIO 三件套。
 - **`interestOps`**:`OP_ACCEPT` / `OP_READ` / `OP_WRITE`,`select()` 返回就绪 key。
 
+## 核心类设计与架构
+> 热身用一个类搞定;S3 会把它拆成 NioServer/NioSession/FrameCodec。
+
+```mermaid
+classDiagram
+    class EchoServer {
+      -Selector selector
+      -ServerSocketChannel serverCh
+      -Thread thread
+      +start() / stop()
+      +localAddress()
+    }
+```
+
+| 类 | 职责 | 设计意图 |
+|---|---|---|
+| `EchoServer` | 单线程 Selector echo:accept→register(OP_READ);read→write 回显 | 热身极简,一个类包揽;生产版(S3)会按职责拆分 |
+
 ## 关键原理(为什么)
 - **为什么 NIO 而非 `java.io`**:一个线程管多连接(Selector 复用),为 S3 多 worker 打基础。
 - **为什么先单线程**:吃透主循环 + 会话;并发留 S3。
