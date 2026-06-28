@@ -77,6 +77,34 @@ classDiagram
 | `GridBackPressureControl` | ThreadLocal 标记 message-thread | 旁路信号量的判据;极简独立,便于复用 |
 | `SslFilter` | SSL 占位(直通) | 预留链位置;真实实现需 SSLEngine |
 
+## 核心链路
+> echo 往返 + **v3 新增的 recovery/背压接入点**(在 S04 流程上插入 `MessageTracker`/`RecoveryDescriptor`/`BoundedWriteQueue`)。
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant W as ClientWorker
+    participant S as NioSession
+    participant H as HeadFilter
+    participant T as TailFilter
+    participant L as Listener(业务)
+    participant RD as RecoveryDescriptor
+    participant Q as BoundedWriteQueue
+    participant MT as MessageTracker
+    C->>W: TCP bytes(OP_READ)
+    W->>MT: onReceived() 达限→pauseReads
+    W->>S: chain.fireInbound Head→Codec→Tail
+    T->>L: onMessage(ses, byte[])
+    L->>W: server.send(ses, msg) 回显
+    W->>S: chain.fireOutbound Tail→Codec→Head
+    H->>RD: add(encoded) 记录未确认(溢出→重连)
+    H->>Q: offer(encoded) 满则阻塞(发送背压)
+    H->>W: myWorker.wakeup()
+    W->>MT: onProcessed() 低于限→resumeReads
+    Note over W: 下一轮:arm OP_WRITE → channel.write
+    W->>C: TCP bytes(echo 回)
+```
+
 ## 关键原理(为什么)
 - **为什么用计数器而非 per-message 去重集**:重连时双方用"已收数"对齐,天然只重发缺失的;无需存"已见消息"集合(省内存、O(1))。小演算:发 m1,m2,m3;对方收到 m1,m2(rcvCnt=2);断线;握手对方说"我收到 2" → 发送方丢 m1,m2,重发 m3;对方收 m3 → 共 m1,m2,m3,**无重复**。
 - **为什么需要两套背压**:发送端防"本端写爆"(队列无界会 OOM);接收端防"对端灌爆"(本端来不及处理)。只做一侧,另一侧失控。

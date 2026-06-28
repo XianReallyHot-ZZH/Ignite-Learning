@@ -63,6 +63,29 @@ classDiagram
 | `FrameCodec`(+`Decoder`) | 长度前缀帧编解码(无状态 encode / 有状态 Decoder) | 编解码与 IO 分离;Decoder 有状态,故内聚成类、每会话一个 |
 | `NioServerListener` | 业务回调契约(`onMessage` 等) | 消费者(下游)只依赖此接口,不耦合 NIO 内部 |
 
+## 核心链路
+> echo 往返(单 worker):Client → NioServer(worker 线程)→ NioSession 解码 → Listener → 回显入队 → 下一轮写出。
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant W as NioServer(worker)
+    participant S as NioSession
+    participant D as FrameCodec.Decoder
+    participant L as Listener(业务)
+    participant Q as writeQueue
+    C->>W: TCP bytes(OP_READ)
+    W->>S: channel.read(readBuf)
+    W->>D: decoder.decode(readBuf)
+    D-->>W: 0~N 条帧(byte[])
+    W->>L: onMessage(ses, byte[])
+    L->>W: server.send(ses, msg) 回显
+    W->>Q: FrameCodec.encode(msg) → offer
+    W->>W: selector.wakeup()
+    Note over W: 下一轮:arm OP_WRITE → channel.write
+    W->>C: TCP bytes(echo 回)
+```
+
 ## 关键原理(为什么)
 - **为什么单 worker 先做**:隔离并发复杂度,先把"selector 主循环 + 会话 + 帧"吃透;多 worker 是 S4 的增量。
 - **为什么写是 pull-based(`send0` 不直接写)**:

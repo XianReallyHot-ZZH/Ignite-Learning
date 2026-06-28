@@ -35,6 +35,18 @@ classDiagram
 |---|---|---|
 | `EchoServer` | 单线程 Selector echo:accept→register(OP_READ);read→write 回显 | 热身极简,一个类包揽;生产版(S3)会按职责拆分 |
 
+## 核心链路
+> echo 往返(热身版,一个类搞定):Client → EchoServer read → flip → write 原样回。
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant E as EchoServer
+    C->>E: TCP bytes(OP_READ)
+    E->>E: channel.read(buf) → buf.flip()
+    E->>C: channel.write(buf) 收啥回啥
+```
+
 ## 关键原理(为什么)
 - **为什么 NIO 而非 `java.io`**:一个线程管多连接(Selector 复用),为 S3 多 worker 打基础。
 - **为什么先单线程**:吃透主循环 + 会话;并发留 S3。
