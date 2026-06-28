@@ -39,6 +39,19 @@ classDiagram
 |---|---|---|
 | `Foo` | …… | …… |
 
+## 核心链路
+> mermaid `sequenceDiagram`:把核心类在**一次关键操作**上串起来(动态行为,补 classDiagram 的静态结构)。选本 session 最有代表性的链路(如 echo 往返 / 一次事务 / 一次 PME)。
+
+```mermaid
+sequenceDiagram
+    participant A
+    participant B
+    participant C
+    A->>B: 方法(参数)
+    B->>C: 方法(参数)
+    C-->>A: 返回
+```
+
 ## 关键原理("为什么")
 > 算法/机制 + 一个小演算(手算例子)。
 - ……

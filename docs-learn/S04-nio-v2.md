@@ -88,6 +88,39 @@ classDiagram
 | `HeadFilter` / `TailFilter` | 链端点(wire 侧入队 / app 侧回调) | 把"网络 IO 终点"与"业务回调"固定在两端,中间过滤器可任意组合 |
 | `NioServerListener` | 业务回调契约(`onMessage` 等) | 消费者(下游 S20)只依赖此接口,不耦合 NIO 内部 |
 
+## 核心链路
+> echo 往返全链路(inbound 解码 + outbound 回显),把 NioServer/ClientWorker/NioSession/FilterChain/Listener/writeQueue 串起来。
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant W as ClientWorker
+    participant S as NioSession
+    participant H as HeadFilter
+    participant F as CodecFilter
+    participant T as TailFilter
+    participant L as Listener(业务)
+    participant Q as writeQueue
+    C->>W: TCP bytes(OP_READ 就绪)
+    W->>S: channel.read(readBuf)
+    W->>S: chain.fireInbound(readBuf)
+    Note over S,T: inbound: Head→Codec→Log→Tail
+    S->>H: fireInbound
+    H->>F: onInbound(ByteBuffer)
+    F->>T: onInbound(byte[])
+    T->>L: onMessage(ses, byte[])
+    L->>W: server.send(ses, msg) 回显
+    W->>S: chain.fireOutbound(msg)
+    Note over S,T: outbound: Tail→Log→Codec→Head
+    S->>T: fireOutbound
+    T->>F: onOutbound(byte[])
+    F->>H: onOutbound(ByteBuffer)
+    H->>Q: offer(ByteBuffer)
+    H->>W: myWorker.wakeup()
+    Note over W: 下一轮:arm OP_WRITE → channel.write
+    W->>C: TCP bytes(echo 回)
+```
+
 ## 关键原理(为什么)
 - **为什么多 worker**:单 worker 在连接多 / read 重时成瓶颈;多 worker 让 IO 并行,而"每会话绑一个 worker"保留**会话内单线程无锁**——并发在会话之间,不在会话之内。
 - **为什么过滤链**:把"编解码 / 日志 / SSL / 追踪"从主循环解耦成**可插拔层**;**双向**语义让入站(解码、解密)和出站(编码、加密)都能被过滤。
