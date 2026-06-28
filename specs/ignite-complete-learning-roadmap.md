@@ -106,7 +106,7 @@ flowchart LR
 | **全局参考资产** | `specs/assets/*.md` | 术语表 / 源码导读 / 包结构(跨 Session 复用) | 已建 |
 | **phase 源码分析** | `specs/phases/PNN-*-analysis.md` | 该 phase 的 grounded 输入(§6 含 **v 级**拆分 + 修订记录 + 引用附录) | 每 phase 一次,先于其 session |
 | **Session 执行规格** | `specs/sessions/SNN-短名.md` | **约束 AI 的瘦规格**:范围/对外接口契约/源码导读/实现步骤/具名验收/引用附录 | 每 session,just-in-time |
-| **Session 学习者讲义** | `docs-learn/SNN-短名.md`(**必写**) | 教学法:概念图/why/陷阱/自测题/对照 | 每 session,与执行规格同产 |
+| **Session 学习者讲义** | `docs-learn/SNN-短名.md`(**必写**) | 教学法:概念图/why/架构图/链路图/陷阱/自测题/对照 | 每 session,**代码完成后产**(描述实际产物) |
 | **里程碑基准报告** | `specs/benchmarks/M?-report.md` | 与 Ignite 的**功能一致性 + 性能基准 + 差距分析**(Ignite 为 oracle) | 每里程碑,**☑ 前置** |
 
 **防幻觉(机器可校验)**:执行规格与 phase 分析末尾都有 ` ```cited-paths ` 附录;产出后跑 `scripts/check-cited-paths.sh` 核验全部引用路径真实存在(取代自报勾选)。

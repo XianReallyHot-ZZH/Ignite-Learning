@@ -11,11 +11,11 @@
 - `specs/ignite-complete-learning-roadmap.md` —— 总路线(35 Session + 依赖 DAG + 文档体系)。
 - `specs/PROGRESS.md` —— 进度状态(roadmap = 计划,PROGRESS = 状态)。
 - `specs/phases/` —— phase 源码分析(模板 `_TEMPLATE-analysis.md`)。
-- `specs/sessions/` —— **执行规格**(模板 `_TEMPLATE-spec.md`:约束 AI 的瘦规格 + 具名测试 + 引用附录)。
-- `docs-learn/` —— 学习者讲义(模板 `_TEMPLATE-handout.md`:教学法,**必写**,`scripts/check-handouts.sh` 把关)。
+- `specs/sessions/` —— **执行规格**(模板 `_TEMPLATE-spec.md`:约束 AI 的瘦规格 + 具名测试 + 引用附录)—— session-doc 产(建前)。
+- `docs-learn/` —— 学习者讲义(模板 `_TEMPLATE-handout.md`:教学法,**由 session-code 建后产**,描述实际产物)。
 - `specs/assets/` —— 全局资产(术语表 / 源码导读 / 包结构)。
 - `ignite-gogogo/sNN-<短名>/` —— 每个 Session 一个**独立多模块 Maven** 工程(父 pom + core 子模块)。
-- `scripts/check-cited-paths.sh` —— 引用路径 lint(防幻觉门)。
+- `scripts/` —— check-cited-paths.sh / check-handouts.sh / check-milestone-report.sh(防幻觉门 + 讲义门 + 里程碑门)。
 - `.claude/skills/` —— analyze-phase / session-doc / session-code / resume。
 
 ## 文档体系(唯一事实源 SoT)
@@ -27,16 +27,17 @@
 ## 工作流(三段流水线,已固化为 skill)
 每个 phase:
 1. `/ignite-analyze-phase <N>` —— phase 源码分析(**每 phase 一次**,先于该 phase 的 session)。
-2. 该 phase 下每个 session,按 **顺序**:`/ignite-session-doc <NN>`(产执行规格)→ `/ignite-session-code <NN>`(写代码 + 具名测试跑绿)。
+2. 该 phase 下每个 session,按 **顺序**:`/ignite-session-doc <NN>`(产执行规格)→ `/ignite-session-code <NN>`(写代码 + 具名测试跑绿 + 注释 + 讲义)。
 
 调用前看 PROGRESS 确认 N/NN。
 
 ## 铁律
 - **保真**:Ignite 自写层纯 JDK 手写;Ignite 用第三方库处我们同用(如 SQL→H2)。
 - **grounding**:分析/规格靠 Explore 读 `vendors/ignite` 真实源码 + **`scripts/check-cited-paths.sh`** 机器核验(不凭记忆、不自报勾选);代码靠**真跑** `mvn -f ignite-gogogo/sNN-*/pom.xml test` 见 `BUILD SUCCESS`,且 §5 具名测试全部存在且绿。
+- **注释**:代码先行 → 绿 → 趁新鲜补注释(类 Javadoc + 非显然行内 + 方法 Javadoc,不写废话);补完复跑 `mvn test` 确认纯注释。
+- **讲义**:由 session-code 在代码完成后产出(描述实际产物:架构图/链路图/对照据真实代码),`scripts/check-handouts.sh` 把关。
 - **依赖锚点 / 包结构**:见 `specs/assets/reading-ignite-source.md`、`specs/assets/package-layout.md`;Java 根包 `org.apache.ignite.learning.*`。
 - **里程碑门**:到达 M1~M7 时产出 `specs/benchmarks/M?-report.md`(与 Ignite 的**功能 + 性能**基准对比,方法见 `specs/assets/benchmarking-against-ignite.md`);`scripts/check-milestone-report.sh` 通过才许在 PROGRESS 勾里程碑 ☑。
-- **讲义门**:每个 session 执行规格都要有配套讲义(`docs-learn/SNN-*.md`,**必写**),`scripts/check-handouts.sh` 把关。
 - **工具链**:Java 21 + Maven 3.9.6。`.gitignore` 已忽略 `target/`。
 
 ## 会话结束前

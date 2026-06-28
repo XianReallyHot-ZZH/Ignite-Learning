@@ -36,45 +36,45 @@
 | 14 | Compute | — | ☐ |
 
 ## Session 进度
-> 列:**教学文档** / **代码工程**(`ignite-gogogo/sNN-*/`) / **测试**。
+> 列:**执行规格**(session-doc 产)/ **代码 + 测试 + 讲义**(session-code 产;讲义描述实际产物)。
 
-| # | Session | 教学文档 | 代码工程 | 测试 | 状态 |
-|---|---|---|---|---|---|
-| **S1** | **项目骨架** | ☑ `S01-skeleton.md` | ☑ `s01-skeleton/` | ☑ 1 passed | ☑ |
-| **S2** | **NIO/并发热身** | ☑ `S02-nio-warmup.md` | ☑ `s02-nio-warmup/` | ☑ 1 passed | ☑ |
-| **S3** | **NIO v1(单worker+会话+帧)** | ☑ `S03-nio-engine.md` | ☑ `s03-nio-engine/` | ☑ 6 passed | ☑ |
-| **S4** | **NIO v2(多worker+过滤链)** | ☑ `S04-nio-v2.md` | ☑ `s04-nio-v2/` | ☑ 10 passed | ☑ |
-| **S5** | **NIO v3(recovery+背压)** | ☑ `S05-nio-v3.md` | ☑ `s05-nio-v3/` | ☑ 18 passed | ☑ |
-| S6 | Direct 编解码 | ☐ | ☐ | ☐ | ☐ |
-| S7 | Marshaller | ☐ | ☐ | ☐ | ☐ |
-| S8 | 页内存 v1 | ☐ | ☐ | ☐ | ☐ |
-| S9 | DataRegion + free list | ☐ | ☐ | ☐ | ☐ |
-| S10 | WAL v1 | ☐ | ☐ | ☐ | ☐ |
-| S11 | WAL 回放 | ☐ | ☐ | ☐ | ☐ |
-| S12 | 内存 B+树 | ☐ | ☐ | ☐ | ☐ |
-| S13 | PageStore | ☐ | ☐ | ☐ | ☐ |
-| S14 | 持久 B+树 | ☐ | ☐ | ☐ | ☐ |
-| S15 | Checkpoint + 恢复 | ☐ | ☐ | ☐ | ☐ |
-| S16 | 本地缓存 | ☐ | ☐ | ☐ | ☐ |
-| S17 | 配置 + 驱逐 | ☐ | ☐ | ☐ | ☐ |
-| S18 | Discovery v1 | ☐ | ☐ | ☐ | ☐ |
-| S19 | DiscoCache | ☐ | ☐ | ☐ | ☐ |
-| S20 | Comm v1 | ☐ | ☐ | ☐ | ☐ |
-| S21 | GridIoManager | ☐ | ☐ | ☐ | ☐ |
-| S22 | Affinity | ☐ | ☐ | ☐ | ☐ |
-| S23 | PME | ☐ | ☐ | ☐ | ☐ |
-| S24 | DHT v1 | ☐ | ☐ | ☐ | ☐ |
-| S25 | DHT + 副本 | ☐ | ☐ | ☐ | ☐ |
-| S26 | 本地事务 | ☐ | ☐ | ☐ | ☐ |
-| S27 | 分布式 2PC | ☐ | ☐ | ☐ | ☐ |
-| S28 | 死锁检测 | ☐ | ☐ | ☐ | ☐ |
-| S29 | MVCC + 恢复 | ☐ | ☐ | ☐ | ☐ |
-| S30 | H2 本地 SQL | ☐ | ☐ | ☐ | ☐ |
-| S31 | 索引 + 下推 | ☐ | ☐ | ☐ | ☐ |
-| S32 | 分布式 SQL | ☐ | ☐ | ☐ | ☐ |
-| S33 | Compute v1 | ☐ | ☐ | ☐ | ☐ |
-| S34 | map-reduce | ☐ | ☐ | ☐ | ☐ |
-| S35 | failover | ☐ | ☐ | ☐ | ☐ |
+| # | Session | 执行规格 | 代码 | 测试 | 讲义 | 状态 |
+|---|---|---|---|---|---|---|
+| **S1** | **项目骨架** | ☑ `S01-skeleton.md` | ☑ `s01-skeleton/` | ☑ 1 passed | ☑ | ☑ |
+| **S2** | **NIO/并发热身** | ☑ `S02-nio-warmup.md` | ☑ `s02-nio-warmup/` | ☑ 1 passed | ☑ | ☑ |
+| **S3** | **NIO v1(单worker+会话+帧)** | ☑ `S03-nio-engine.md` | ☑ `s03-nio-engine/` | ☑ 6 passed | ☑ | ☑ |
+| **S4** | **NIO v2(多worker+过滤链)** | ☑ `S04-nio-v2.md` | ☑ `s04-nio-v2/` | ☑ 10 passed | ☑ | ☑ |
+| **S5** | **NIO v3(recovery+背压)** | ☑ `S05-nio-v3.md` | ☑ `s05-nio-v3/` | ☑ 18 passed | ☑ | ☑ |
+| S6 | Direct 编解码 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S7 | Marshaller | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S8 | 页内存 v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S9 | DataRegion + free list | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S10 | WAL v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S11 | WAL 回放 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S12 | 内存 B+树 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S13 | PageStore | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S14 | 持久 B+树 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S15 | Checkpoint + 恢复 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S16 | 本地缓存 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S17 | 配置 + 驱逐 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S18 | Discovery v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S19 | DiscoCache | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S20 | Comm v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S21 | GridIoManager | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S22 | Affinity | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S23 | PME | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S24 | DHT v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S25 | DHT + 副本 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S26 | 本地事务 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S27 | 分布式 2PC | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S28 | 死锁检测 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S29 | MVCC + 恢复 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S30 | H2 本地 SQL | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S31 | 索引 + 下推 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S32 | 分布式 SQL | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S33 | Compute v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S34 | map-reduce | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S35 | failover | ☐ | ☐ | ☐ | ☐ | ☐ |
 
 ## 里程碑
 > ☑ **前置**:产出 `specs/benchmarks/M?-report.md` 且 `scripts/check-milestone-report.sh` 通过(方法见 `specs/assets/benchmarking-against-ignite.md`)。
