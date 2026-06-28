@@ -14,8 +14,30 @@
 - 动手实现 ……
 
 ## 核心概念与设计
-> 带 ASCII / Mermaid 图。
+> 带 ASCII / Mermaid 图(机制 / 流程)。
 - ……
+
+## 核心类设计与架构
+> **图(mermaid `classDiagram`)管"类怎么组合"**:containment(`*--`)/ 继承(`<|--`)/ 关联(`-->`)/ 依赖(`..>`)。
+> **表管"为什么这么切"**(设计意图)。图嵌 ` ```mermaid ` 源码(GitHub / VS Code 渲染,可 git diff)。
+
+```mermaid
+classDiagram
+    class Foo {
+      -字段
+      +方法()
+    }
+    class Bar
+    class Baz {
+      <<interface>>
+    }
+    Foo *-- Bar : owns
+    Bar --> Baz : delegates
+```
+
+| 类 | 职责 | 设计意图(为什么单独成类) |
+|---|---|---|
+| `Foo` | …… | …… |
 
 ## 关键原理("为什么")
 > 算法/机制 + 一个小演算(手算例子)。

@@ -28,6 +28,66 @@
 - `TailFilter`:app 一侧,**入站终点**(→ listener)、**出站起点**(`send` 进入链)。
 - 每个 `NioSession` 持自己的链(v1 的直连 listener 被链取代)。
 
+## 核心类设计与架构
+> 类怎么组合(图)+ 为什么这么切(表)。
+
+```mermaid
+classDiagram
+    class NioServer {
+      -ClientWorker[] workers
+      -AtomicInteger balancer
+      +send(NioSession, byte[])
+    }
+    class ClientWorker {
+      -Selector selector
+      +register(SocketChannel)
+      +submit(Runnable)
+    }
+    class NioSession {
+      -FilterChain chain
+      -ClientWorker myWorker
+      -writeQueue
+    }
+    class FilterChain {
+      +fireInbound()
+      +fireOutbound()
+    }
+    class Filter {
+      <<abstract>>
+    }
+    class HeadFilter
+    class CodecFilter
+    class LogFilter
+    class TailFilter
+    class NioServerListener {
+      <<interface>>
+      +onMessage(ses,msg)
+    }
+    NioServer *-- ClientWorker : owns N
+    ClientWorker *-- NioSession : 名下会话
+    NioSession *-- FilterChain : 每会话一条
+    FilterChain *-- HeadFilter
+    FilterChain *-- CodecFilter
+    FilterChain *-- LogFilter
+    FilterChain *-- TailFilter
+    Filter <|-- HeadFilter
+    Filter <|-- CodecFilter
+    Filter <|-- LogFilter
+    Filter <|-- TailFilter
+    TailFilter --> NioServerListener : 回调
+    NioServer ..> NioServerListener : 持有
+```
+
+| 类 | 职责 | 设计意图(为什么单独成类) |
+|---|---|---|
+| `NioServer` | 生命周期 + accept 派发 + 对外 `send` | 把"接生(accept)"与"养(read/write)"分离;accept 线程不背读写负载 |
+| `ClientWorker` | 单 selector 循环 + 名下会话的 read/write | 保证"会话内单线程无锁"不变量;N 个 worker 并行 |
+| `NioSession` | 单连接状态(链 + 所属 worker + 写队列) | 每连接一份有状态(过滤链 / codec 解码器独享);会话内串行 |
+| `FilterChain` | 双向链接过滤器 + 分发 | 把"协议/日志/SSL"从 IO 主循环解耦成可插拔层 |
+| `Filter`(抽象) | 过滤器契约(双向 on / proceed) | 统一所有过滤器接口,链里任意插拔 |
+| `HeadFilter` / `TailFilter` | 链端点(wire 侧入队 / app 侧回调) | 把"网络 IO 终点"与"业务回调"固定在两端,中间过滤器可任意组合 |
+| `NioServerListener` | 业务回调契约(`onMessage` 等) | 消费者(下游 S20)只依赖此接口,不耦合 NIO 内部 |
+
 ## 关键原理(为什么)
 - **为什么多 worker**:单 worker 在连接多 / read 重时成瓶颈;多 worker 让 IO 并行,而"每会话绑一个 worker"保留**会话内单线程无锁**——并发在会话之间,不在会话之内。
 - **为什么过滤链**:把"编解码 / 日志 / SSL / 追踪"从主循环解耦成**可插拔层**;**双向**语义让入站(解码、解密)和出站(编码、加密)都能被过滤。
