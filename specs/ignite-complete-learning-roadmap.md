@@ -216,6 +216,7 @@ flowchart LR
 - **验收**:单测覆盖对象往返 + 体积对比 Java 序列化。
 - **难度 / 工时**:⭐⭐⭐ / 3~5 天。
 - **产出物**:可插拔 Marshaller。
+- **执行规格**:[S07-marshaller](sessions/S07-marshaller.md)
 
 ---
 

@@ -5,8 +5,8 @@
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
-- **最近完成**:**S6 Direct 编解码 v1** —— `s06-direct-codec/` 工程产出:`Message` 接口 + `MessageFactory`(+32768 数组注册表)+ `DirectByteBufferStream`/Writer/Reader + `MessageCodecFilter` seam + 泛化 `NioServer<T>` + `PingMessage`;`mvn test` **25 passed, 0 failed**(继承 18 + 新 7);讲义 + `deferred.md` Phase 2 已更。
-- **下一步**:`/ignite-session-doc 07`(Marshaller v2 执行规格)→ `/ignite-session-code 07`…… 之后 Phase 2 收官。(Phase 0/1 无里程碑,M1 要到 S15)
+- **最近完成**:**S7 执行规格** —— `sessions/S07-marshaller.md` 产出(Marshaller v2:可插拔 `Marshaller` SPI + `OptimizedMarshaller` 自定义紧凑格式[type tag + `OptimizedClassDescriptor` 元数据缓存 + `HandleTable` 环检测 + 反射]+ `JdkMarshaller` 对照 + 进程内 `MarshallerContext`;现实校准 Marshaller 在 2.18.0 迁出 core 到 `modules/binary`;9 条引用 lint OK)。
+- **下一步**:`/ignite-session-code 07`(按 S07 规格写代码 + 具名测试跑绿 + 讲义)—— **Phase 2 收官**。(Phase 0/1 无里程碑,M1 要到 S15)
 - **试点**:Phase 1(NIO)流水线验证中;Phase 0(S1~S2)试点期间暂越过(真做课程时 Phase 0 先行)。
 
 ## 基础设施(已建立)
@@ -46,7 +46,7 @@
 | **S4** | **NIO v2(多worker+过滤链)** | ☑ `S04-nio-v2.md` | ☑ `s04-nio-v2/` | ☑ 10 passed | ☑ | ☑ |
 | **S5** | **NIO v3(recovery+背压)** | ☑ `S05-nio-v3.md` | ☑ `s05-nio-v3/` | ☑ 18 passed | ☑ | ☑ |
 | **S6** | **Direct 编解码 v1** | ☑ `S06-direct-codec.md` | ☑ `s06-direct-codec/` | ☑ 25 passed | ☑ | ☑ |
-| S7 | Marshaller | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S7 | Marshaller | ☑ `S07-marshaller.md` | ☐ | ☐ | ☐ | ☐ |
 | S8 | 页内存 v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
 | S9 | DataRegion + free list | ☐ | ☐ | ☐ | ☐ | ☐ |
 | S10 | WAL v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
