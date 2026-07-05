@@ -197,7 +197,7 @@ flowchart LR
 ## Phase 2 · Marshaller + Direct 消息编解码
 
 ### Session 6(S6)— Direct 消息编解码 v1
-- **镜像源码**:`.../internal/direct/`(`DirectMessageReader`/`DirectMessageWriter`)、`.../internal/marshaller/`。
+- **镜像源码**:`.../internal/direct/`(`DirectMessageReader`/`DirectMessageWriter`)、`.../modules/binary/.../marshaller/`(Marshaller SPI,2.18.0 迁出 core)。
 - **前置**:S4(消息帧已就绪)。
 - **实现要点**:
   - v1:消息类型注册表(类型 ID ↔ 工厂);`DirectMessage` 基类 + reader/writer 按字段顺序读写(紧凑二进制,而非 Java 序列化)。
@@ -207,7 +207,7 @@ flowchart LR
 - **产出物**:`DirectMessage` 编解码 + 类型注册表。
 
 ### Session 7(S7)— Marshaller v2
-- **镜像源码**:`.../internal/marshaller/`(optimized marshaller、`Marshaller` SPI 接口)。
+- **镜像源码**:`.../modules/binary/{api,impl}/.../marshaller/`(`Marshaller` SPI 接口 + optimized/jdk 实现;2.18.0 迁出 core)。
 - **前置**:S6。
 - **实现要点**:
   - v2:可插拔 `Marshaller` 接口;实现一个"优化 marshaller"(对象↔字节,处理基本类型/数组/嵌套),供后续对象值序列化。

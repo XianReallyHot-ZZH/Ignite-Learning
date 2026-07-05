@@ -30,7 +30,7 @@
 | **GridIoManager** | 消息路由中枢:按 **topic** 把入站消息分发给处理器 | `…/internal/managers/communication/GridIoManager.java` |
 | **GridTopic** | 消息主题枚举(路由键) | `…/internal/GridTopic.java` |
 | **GridNioServer** | Ignite 自研异步 NIO 框架(通信传输底座) | `…/internal/util/nio/GridNioServer.java` |
-| **Marshaller** | 对象↔字节序列化(可插拔) | `…/internal/marshaller/`、`…/marshaller/` |
+| **Marshaller** | 对象↔字节序列化(可插拔) | `…/modules/binary/{api,impl}/.../marshaller/`(2.18.0 迁出 core) |
 | **Direct message** | 紧凑二进制协议消息(`DirectMessageReader/Writer` 按字段读写) | `…/internal/direct/` |
 
 ## 3. 存储与持久化(PageMemory / WAL / B+树)

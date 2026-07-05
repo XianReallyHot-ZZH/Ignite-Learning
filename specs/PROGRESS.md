@@ -5,8 +5,8 @@
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
-- **最近完成**:**Phase 0 回补** —— S1(骨架,1 测试)+ S2(NIO 热身,1 测试)均绿(2026-06-27);此前 Phase 1(NIO,S3~S5)已完成。
-- **下一步**:**Phase 2(Marshaller + Direct,S6~S7)** —— `/ignite-analyze-phase 2` → `/ignite-session-doc 06` → `/ignite-session-code 06` …(Phase 0/1 无里程碑,M1 要到 S15)
+- **最近完成**:**Phase 2 源码分析** —— `phases/P02-marshaller-direct-analysis.md` 产出(Direct `internal/direct/` + Marshaller `modules/binary/{api,impl}` 深读;39 条引用路径 lint 全 OK;现实校准:Marshaller 在 2.18.0 已迁出 core 到 `modules/binary`)。
+- **下一步**:`/ignite-session-doc 06`(Direct 编解码 v1 执行规格)→ `/ignite-session-code 06` …(Phase 0/1/2-analysis 无里程碑,M1 要到 S15)
 - **试点**:Phase 1(NIO)流水线验证中;Phase 0(S1~S2)试点期间暂越过(真做课程时 Phase 0 先行)。
 
 ## 基础设施(已建立)
@@ -21,7 +21,7 @@
 |---|---|---|---|
 | 0 | 前置基础 | N/A(不镜像 Ignite) | ☑(S1/S2 已补) |
 | 1 | NIO 引擎 | `phases/P01-nio-analysis.md` | ☑ |
-| 2 | Marshaller + Direct | — | ☐ |
+| 2 | Marshaller + Direct | `phases/P02-marshaller-direct-analysis.md` | ☑ |
 | 3 | 页内存 PageMemory | — | ☐ |
 | 4 | WAL | — | ☐ |
 | 5 | PageStore + B+树 + Checkpoint | — | ☐ |

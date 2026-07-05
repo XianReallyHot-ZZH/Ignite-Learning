@@ -54,9 +54,11 @@ ignite-gogogo/                                # 所有 Session 工程的容器
 | `learning/internal/IgniteKernal.java`、`GridKernalContext.java` | `internal/IgniteKernal`、`GridKernalContext` | 生命周期 + 全局上下文 | S0+ / 渐进 |
 | `learning/internal/util/` | `internal/util/` | 并发原语、工具 | S1~S2 |
 | `learning/internal/util/nio/`(`NioServer`、`FilterChain`、`Worker`) | `internal/util/nio/` | **异步 NIO 引擎** | S3~S5 |
-| `learning/internal/marshaller/`(`Marshaller` 接口 + optimized) | `internal/marshaller/` | 对象序列化 | S7 |
+| `learning/internal/marshaller/`(`Marshaller` 接口 + optimized) | `modules/binary/{api,impl}/.../marshaller/`† | 对象序列化 | S7 |
 | `learning/internal/direct/`(`DirectMessageReader/Writer`) | `internal/direct/` | 协议消息编解码 | S6 |
 | `learning/internal/GridTopic.java` | `internal/GridTopic` | 消息主题 | S21 |
+
+> † **Marshaller 路径注**:2.18.0 已把 Marshaller 从 core 迁出到独立 `binary` 模块(`modules/binary/api` = SPI、`modules/binary/impl` = optimized/jdk 实现,经 `ServiceLoader` 装配);core 只剩 `MarshallerContextImpl` + 工具类。学习版**不复现** binary 模块拆分 / BinaryObject 协议 / ServiceLoader,按**经典 SPI + Optimized 形态**放 `learning/internal/marshaller/`(详见 `phases/P02-marshaller-direct-analysis.md` §1 现实校准)。
 
 ### 2.4 internal 存储与持久化层
 
