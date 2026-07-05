@@ -31,4 +31,20 @@
 
 ---
 
+## Phase 2(Direct + Marshaller)
+
+### 情况 B:out-of-scope(无 session,backlog)
+
+| 功能 | 为什么简化/跳过 | 出处 | 深入优先级 |
+|---|---|---|---|
+| codegen `MessageSerializer` + `@Order` 注解处理器 | Ignite 2.18.0 现代写法:编译期生成等价的 `switch(state)` 状态机,消除手写样板;v1 手写 `writeTo`/`readFrom` | S06 讲义 对照 | 中 |
+| varint+zigzag 编码 int/long | 性能:base-128 varint 让小数值(数组长度/ordinal/timeout)省字节;v1 用定宽 | S06 讲义 对照 | 中 |
+| 跨 partial-read 的 resume 状态机 | 性能:`DirectByteBufferStream` 的逐字段游标(`tmpArrOff`/`arrOff`/`uuidState`/`prim`…)跨 NIO 读边界续读,零中间缓冲;v1 由 `FrameCodec` 保证消息完整,不需要 | S06 讲义 对照 | 高 |
+| `CacheObject`/`KeyCacheObject`/`AffinityTopologyVersion` Direct 字段类型 | 保真:Ignite `internal/direct` 向上耦合 cache 子系统(一等公民字段类型);学习版载荷走 Marshaller `byte[]`,不需要 | S06 讲义 对照 | 低 |
+| `Collection`/`Map` Direct 字段 | 功能:v1 只原语数组;后续协议消息若真有集合字段再补 | S06 讲义 对照 | 低 |
+| `MessageFormatter` SPI | 功能:多 reader/writer 切换(插件扩展点);v1 单一实现 | S06 讲义 对照 | 低 |
+| Ignite 的 `writeHeader`/`isHeaderWritten` 机制 | 简化:Ignite 消息自带 type header;v1 把 type 统一交给上层(codec 顶层 / writeMessage 嵌套)写,去掉这层历史包袱 | S06 讲义 对照 | 低 |
+
+---
+
 > **后续 phase 逐个追加**(Phase 2~14),格式同上。35 session 完成后,out-of-scope 列 = "进阶深入"菜单。
