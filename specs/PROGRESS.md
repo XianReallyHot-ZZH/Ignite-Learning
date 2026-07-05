@@ -5,8 +5,8 @@
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
-- **最近完成**:**S7 执行规格** —— `sessions/S07-marshaller.md` 产出(Marshaller v2:可插拔 `Marshaller` SPI + `OptimizedMarshaller` 自定义紧凑格式[type tag + `OptimizedClassDescriptor` 元数据缓存 + `HandleTable` 环检测 + 反射]+ `JdkMarshaller` 对照 + 进程内 `MarshallerContext`;现实校准 Marshaller 在 2.18.0 迁出 core 到 `modules/binary`;9 条引用 lint OK)。
-- **下一步**:`/ignite-session-code 07`(按 S07 规格写代码 + 具名测试跑绿 + 讲义)—— **Phase 2 收官**。(Phase 0/1 无里程碑,M1 要到 S15)
+- **最近完成**:**S7 Marshaller v2** —— `s07-marshaller/` 工程产出:可插拔 `Marshaller` SPI + `OptimizedMarshaller`(自定义紧凑格式:type tag + `OptimizedClassDescriptor` 元数据缓存 + `HandleTable` 环检测 + 反射,避 Unsafe)+ 进程内 `MarshallerContext` + `JdkMarshaller` 对照;`mvn test` **31 passed**(继承 25 + 新 6);讲义 + `deferred.md` S7 已更。**Phase 2 收官 ✅**(S6+S7 全完成)。
+- **下一步**:**Phase 3(页内存 PageMemory,S8~S9)** —— `/ignite-analyze-phase 3` → `/ignite-session-doc 08` → `/ignite-session-code 08` …(存储支,完全隔离无需集群;M1 要到 S15)
 - **试点**:Phase 1(NIO)流水线验证中;Phase 0(S1~S2)试点期间暂越过(真做课程时 Phase 0 先行)。
 
 ## 基础设施(已建立)
@@ -46,7 +46,7 @@
 | **S4** | **NIO v2(多worker+过滤链)** | ☑ `S04-nio-v2.md` | ☑ `s04-nio-v2/` | ☑ 10 passed | ☑ | ☑ |
 | **S5** | **NIO v3(recovery+背压)** | ☑ `S05-nio-v3.md` | ☑ `s05-nio-v3/` | ☑ 18 passed | ☑ | ☑ |
 | **S6** | **Direct 编解码 v1** | ☑ `S06-direct-codec.md` | ☑ `s06-direct-codec/` | ☑ 25 passed | ☑ | ☑ |
-| S7 | Marshaller | ☑ `S07-marshaller.md` | ☐ | ☐ | ☐ | ☐ |
+| **S7** | **Marshaller v2** | ☑ `S07-marshaller.md` | ☑ `s07-marshaller/` | ☑ 31 passed | ☑ | ☑ |
 | S8 | 页内存 v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
 | S9 | DataRegion + free list | ☐ | ☐ | ☐ | ☐ | ☐ |
 | S10 | WAL v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
@@ -94,5 +94,6 @@
 - `ignite-gogogo/s04-nio-v2/`:`mvn test` → **10 passed, 0 failed**(FrameCodec 5 + FilterChain 2 + CodecFilter 2 + MultiWorkerEcho 1)。
 - `ignite-gogogo/s05-nio-v3/`:`mvn test` → **18 passed, 0 failed**(继承 10 + RecoveryDescriptor 5 + RecoveryResend 1 + SendBackpressure 1 + ReceiveBackpressure 1)。
 - `ignite-gogogo/s06-direct-codec/`:`mvn test` → **25 passed, 0 failed**(继承 18 + DirectMessageRoundtrip 5 + MessageFactory 1 + PingMessageOverNio 1;NioServer 泛化 `<T>` + Direct 编解码 seam 叠 CodecFilter 帧)。
+- `ignite-gogogo/s07-marshaller/`:`mvn test` → **31 passed, 0 failed**(继承 25 + OptimizedMarshaller 4[pojo/嵌套数组/环/体积对比] + MarshallerContext 1 + MarshallerViaDirect 1;自定义紧凑格式 + handle 环检测 + 反射;**Phase 2 收官**)。
 - `ignite-gogogo/s01-skeleton/`:`mvn test` → **1 passed**(HelloTest;多模块骨架,后续复制源)。
 - `ignite-gogogo/s02-nio-warmup/`:`mvn test` → **1 passed**(EchoTest#echoRoundtrip;单线程 Selector echo 往返)。

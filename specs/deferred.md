@@ -45,6 +45,20 @@
 | `MessageFormatter` SPI | 功能:多 reader/writer 切换(插件扩展点);v1 单一实现 | S06 讲义 对照 | 低 |
 | Ignite 的 `writeHeader`/`isHeaderWritten` 机制 | 简化:Ignite 消息自带 type header;v1 把 type 统一交给上层(codec 顶层 / writeMessage 嵌套)写,去掉这层历史包袱 | S06 讲义 对照 | 低 |
 
+**S7(Marshaller)out-of-scope:**
+
+| 功能 | 为什么简化/跳过 | 出处 | 深入优先级 |
+|---|---|---|---|
+| BinaryObject 协议(`BinaryObjectImpl`) | 2.18.0 现代默认 marshaller,另一套巨大子系统(二进制协议 + metadata);学习版只经典 Optimized 形态 | S07 讲义 对照 | 中 |
+| 集群级 `MarshallerContextImpl`(mapping transport / 文件存储 / peer class loading) | 无集群阶段无意义;学习版用进程内 `ConcurrentHashMap` | S07 讲义 对照 | 中(到集群后再看) |
+| `sun.misc.Unsafe`(`allocateInstance` + 字段偏移直访) | 危险(JDK 后续可能移除 / 绕过不变量);学习版用反射无参构造器 + `Field.get/set` | S07 讲义 对照 | 高(性能 + 能力) |
+| `Externalizable` + 自定义 `writeObject`/`readObject`/`writeReplace`/`readResolve` 钩子 | 功能:v2 只反射非 transient 字段,不调用户自定义序列化钩子 | S07 讲义 对照 | 中 |
+| 特定集合特化(`ArrayList`/`HashMap` 等专用分支) | 性能:Ignite 对常用集合走专用读写;学习版当普通对象反射 | S07 讲义 对照 | 低 |
+| 流池(`OptimizedObjectStreamRegistry`)+ `checksum`/`serialVersionUID` 校验 | 性能/安全:复用流对象 / 防版本漂移;学习版每消息新建 + 无校验 | S07 讲义 对照 | 中 |
+| 安全过滤器(`IgniteObjectInputFilter`/`IgniteMarshallerClassFilter`,JEP 290) | 安全:反序列化白/黑名单;学习版默认信任 | S07 讲义 对照 | 高(生产必需) |
+| `ServiceLoader` 工厂装配 + `.NET`/C++ 跨平台 interop(`DOTNET_ID`) | 工程化:跨发行版可插拔 / 跨语言;学习版直接 `new` + 纯 Java | S07 讲义 对照 | 低 |
+| typeId-only 线格式 | 体积:Ignite 线上只传 4B typeId(集群协商映射);学习版写全类名 + handle 去重(robust,无集群依赖) | S07 讲义 对照 | 低 |
+
 ---
 
 > **后续 phase 逐个追加**(Phase 2~14),格式同上。35 session 完成后,out-of-scope 列 = "进阶深入"菜单。
