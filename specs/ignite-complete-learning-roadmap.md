@@ -200,11 +200,12 @@ flowchart LR
 - **镜像源码**:`.../internal/direct/`(`DirectMessageReader`/`DirectMessageWriter`)、`.../modules/binary/.../marshaller/`(Marshaller SPI,2.18.0 迁出 core)。
 - **前置**:S4(消息帧已就绪)。
 - **实现要点**:
-  - v1:消息类型注册表(类型 ID ↔ 工厂);`DirectMessage` 基类 + reader/writer 按字段顺序读写(紧凑二进制,而非 Java 序列化)。
+  - v1:消息类型注册表(类型 ID ↔ 工厂);`Message` 接口 + reader/writer 按字段顺序读写(紧凑二进制,而非 Java 序列化;2.18.0 无 `DirectMessage` 基类,只有 `Message` 接口)。
   - v1:跑通"NioServer 收发一条自定义 `PingMessage`"。
 - **验收**:demo = 经 NioServer 发送/接收结构化消息;单测覆盖多种字段类型的往返一致性。
 - **难度 / 工时**:⭐⭐⭐ / 3~4 天。
 - **产出物**:`DirectMessage` 编解码 + 类型注册表。
+- **执行规格**:[S06-direct-codec](sessions/S06-direct-codec.md)
 
 ### Session 7(S7)— Marshaller v2
 - **镜像源码**:`.../modules/binary/{api,impl}/.../marshaller/`(`Marshaller` SPI 接口 + optimized/jdk 实现;2.18.0 迁出 core)。
