@@ -5,8 +5,8 @@
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
-- **最近完成**:**S7 Marshaller v2** —— `s07-marshaller/` 工程产出:可插拔 `Marshaller` SPI + `OptimizedMarshaller`(自定义紧凑格式:type tag + `OptimizedClassDescriptor` 元数据缓存 + `HandleTable` 环检测 + 反射,避 Unsafe)+ 进程内 `MarshallerContext` + `JdkMarshaller` 对照;`mvn test` **31 passed**(继承 25 + 新 6);讲义 + `deferred.md` S7 已更。**Phase 2 收官 ✅**(S6+S7 全完成)。
-- **下一步**:**Phase 3(页内存 PageMemory,S8~S9)** —— `/ignite-analyze-phase 3` → `/ignite-session-doc 08` → `/ignite-session-code 08` …(存储支,完全隔离无需集群;M1 要到 S15)
+- **最近完成**:**Phase 3 源码分析** —— `specs/phases/P03-page-memory-analysis.md`(8 节 + §6 v级拆分 + §4.1「free list」澄清 + §1 现实校准:`Unsafe`+裸 `long` 非 DirectByteBuffer/引用计数;`freelist/` 包是行级非页回收);`check-cited-paths` **29/29 OK**。上一步:S7 Marshaller v2(`s07-marshaller/`、`mvn test` **31 passed**)→ **Phase 2 收官 ✅**。
+- **下一步**:**Phase 3 存储支(S8~S9)** —— `/ignite-session-doc 08`(页内存 v1:PageIdUtils 位运算 + 纯内存实现)→ `/ignite-session-code 08` → S9(DataRegion + Treiber free-list + 条带 R/W 锁)。**完全隔离,无需集群;M1 要到 S15。**
 - **试点**:Phase 1(NIO)流水线验证中;Phase 0(S1~S2)试点期间暂越过(真做课程时 Phase 0 先行)。
 
 ## 基础设施(已建立)
@@ -22,7 +22,7 @@
 | 0 | 前置基础 | N/A(不镜像 Ignite) | ☑(S1/S2 已补) |
 | 1 | NIO 引擎 | `phases/P01-nio-analysis.md` | ☑ |
 | 2 | Marshaller + Direct | `phases/P02-marshaller-direct-analysis.md` | ☑ |
-| 3 | 页内存 PageMemory | — | ☐ |
+| 3 | 页内存 PageMemory | `phases/P03-page-memory-analysis.md` | ☑ |
 | 4 | WAL | — | ☐ |
 | 5 | PageStore + B+树 + Checkpoint | — | ☐ |
 | 6 | 本地缓存 | — | ☐ |
