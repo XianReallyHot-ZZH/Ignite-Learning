@@ -5,8 +5,8 @@
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
-- **最近完成**:**S09 执行规格** —— `specs/sessions/S09-data-region-freelist.md`(Phase 3 收官 · v2:全局 Treiber free-list[侵入式 next + ABA 计数器] + 多段惰性增长[SEG_CNT=16/IDX_BITS=28] + 条带 `OffheapReadWriteLock`[8B 锁字 + tag 防陈旧 + upgrade] + `DataRegion` 容器 + `DirectMemoryProvider`);现实校准 DataRegion 是 ~85 行 POJO 容器(非连续 slab,堆外在 `Segment[]`);契约稳定性 = **不改 S8 `PageMemory` 接口**,只升级 `PageMemoryNoStoreImpl` 实现 + 新暴露 `DataRegion`;`check-cited-paths` **10/10 OK**。上一步:S08 代码(`s08-page-memory/`,10 passed)。
-- **下一步**:**Phase 3 收官** —— `/ignite-session-code 09`(建 `s09-data-region/`:从 s08 复制扩展,重写 `PageMemoryNoStoreImpl` v2[free-list + 多段 + 锁] + `OffheapReadWriteLock` + `DataRegion` + provider,跑绿 §5 具名测试 + 讲义)→ **Phase 3 完成**,转 Phase 4(WAL,S10/S11)。**完全隔离,无需集群;M1 要到 S15。**
+- **最近完成**:**S09 代码 + 讲义 —— Phase 3 收官 ✅** —— `ignite-gogogo/s09-data-region/`(`mvn test` **19 passed**):全局 Treiber free-list(侵入式 next + ABA 计数器)+ 多段惰性增长(`SEG_BITS=4`)+ 条带 `OffheapReadWriteLock`(8B 锁字 + tag 防陈旧 + upgrade)+ `DataRegion` 容器 + `DirectMemoryProvider`;**不改 S8 `PageMemory` 接口**,只升级实现 + 新暴露 `DataRegion`(S8 继承测试原样跑过)。讲义 `docs-learn/S09-data-region-freelist.md`。踩坑:`freePage` 跨 session 不可改 void / `AtomicLong.increment()`→`LongAdder` / `writeUnlock` updated 作用域 / `PAGE_MARKER` offset 0。上一步:S09 执行规格(10/10 cited)。
+- **下一步**:**Phase 3 完成,转 Phase 4(WAL)** —— `/ignite-analyze-phase 4`(WAL 源码分析)→ `/ignite-session-doc 10`(WAL v1:记录模型 + 追加写)→ `/ignite-session-code 10`。**完全隔离,无需集群;M1 要到 S15。**
 - **试点**:Phase 1(NIO)流水线验证中;Phase 0(S1~S2)试点期间暂越过(真做课程时 Phase 0 先行)。
 
 ## 基础设施(已建立)
@@ -48,7 +48,7 @@
 | **S6** | **Direct 编解码 v1** | ☑ `S06-direct-codec.md` | ☑ `s06-direct-codec/` | ☑ 25 passed | ☑ | ☑ |
 | **S7** | **Marshaller v2** | ☑ `S07-marshaller.md` | ☑ `s07-marshaller/` | ☑ 31 passed | ☑ | ☑ |
 | **S8** | **页内存 v1** | ☑ `S08-page-memory-v1.md` | ☑ `s08-page-memory/` | ☑ 10 passed | ☑ | ☑ |
-| S9 | DataRegion + free list | ☑ `S09-data-region-freelist.md` | ☐ | ☐ | ☐ | ◐ |
+| **S9** | **DataRegion + free list** | ☑ `S09-data-region-freelist.md` | ☑ `s09-data-region/` | ☑ 19 passed | ☑ | ☑ |
 | S10 | WAL v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
 | S11 | WAL 回放 | ☐ | ☐ | ☐ | ☐ | ☐ |
 | S12 | 内存 B+树 | ☐ | ☐ | ☐ | ☐ | ☐ |
@@ -96,5 +96,6 @@
 - `ignite-gogogo/s06-direct-codec/`:`mvn test` → **25 passed, 0 failed**(继承 18 + DirectMessageRoundtrip 5 + MessageFactory 1 + PingMessageOverNio 1;NioServer 泛化 `<T>` + Direct 编解码 seam 叠 CodecFilter 帧)。
 - `ignite-gogogo/s07-marshaller/`:`mvn test` → **31 passed, 0 failed**(继承 25 + OptimizedMarshaller 4[pojo/嵌套数组/环/体积对比] + MarshallerContext 1 + MarshallerViaDirect 1;自定义紧凑格式 + handle 环检测 + 反射;**Phase 2 收官**)。
 - `ignite-gogogo/s08-page-memory/`:`mvn test` → **10 passed, 0 failed**(PageIdUtils 4[往返/边界/effectivePageId/rotate永不为0] + FullPageId 2[rotation-blind/NULL_PAGE] + PageMemoryNoStoreImpl 4[pageBuffer往返/多页不重叠/页头24B布局/段满OOM];裸 long + `sun.misc.Unsafe` + 24B 头 + 单段 bump;**Phase 3 开篇**;surefire `--add-opens java.base/java.nio`)。
+- `ignite-gogogo/s09-data-region/`:`mvn test` → **19 passed, 0 failed**(继承 10 + FreeList 2[复用/ABA计数器单调] + PageLock 3[读写互斥/tag陈旧检测/upgrade] + MultiSegment 1[惰性增长超 initialSize] + PageMemoryConcurrency 1[并发 alloc/free 无丢失重复] + PageMemoryDemo 1[内存不无限增长] + DataRegion 1[lifecycle+config];全局 Treiber free-list[侵入式 next + ABA] + 多段 + 条带 OffheapReadWriteLock[8B 锁字 + tag 防陈旧 + upgrade] + DataRegion 容器 + DirectMemoryProvider;**Phase 3 收官**;契约不变,S8 测试原样跑过)。
 - `ignite-gogogo/s01-skeleton/`:`mvn test` → **1 passed**(HelloTest;多模块骨架,后续复制源)。
 - `ignite-gogogo/s02-nio-warmup/`:`mvn test` → **1 passed**(EchoTest#echoRoundtrip;单线程 Selector echo 往返)。

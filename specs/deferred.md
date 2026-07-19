@@ -81,6 +81,10 @@
 | FFM(`java.lang.foreign.MemorySegment`)材质 | 保真优先:Unsafe 让 S9 无锁 free-list / 页内锁字依赖裸地址写;FFM 为备选切换点(`OffHeap`) | S08 讲义 对照 | 中(JDK 后续若移除 Unsafe) |
 | `metrics()` 上漏(`DataRegionMetricsImpl`) | 解耦:返回类型会把 cache 子系统依赖漏进 `PageMemory` 接口;S9 自定轻量 metrics | S08 讲义 对照 | 低 |
 | `trackAcquiredPages` 测试计数器 | 测试专用:Ignite `releasePage` 仅 `trackAcquiredPages=true` 时减计数;学习版 `releasePage` no-op | S08 讲义 对照 | 低 |
+| 锁公平调度(write-waiter 优先抢占读)+ 随机唤醒策略(`IGNITE_OFFHEAP_RANDOM_RW_POLICY`) | 功能:防写饥饿;学习版 unlock 后简单 signalAll(写优先) | S09 讲义 对照 | 中 |
+| 完整 `signalNextWaiter` 公平唤醒链 | 复杂度:Ignite 按等待者类型精准唤醒;学习版 signalAll | S09 讲义 对照 | 低 |
+| `SEG_CNT=16` 完整多段分段 | 功能:Ignite 按 `(maxSize-initial)/15` 分 16 段;学习版两段简化(首段 + 余量) | S09 讲义 对照 | 低 |
+| 堆外 `lastAllocatedIdxPtr` CAS bump | 性能:Ignite 段内 bump 指针放堆外(CAS 无 Java 锁);学习版用 `AtomicInteger`(不占堆外,功能等价) | S09 讲义 对照 | 低 |
 
 ---
 
