@@ -244,6 +244,7 @@ flowchart LR
 - **验收**:demo = 分配大量页后释放,再分配复用(观测物理内存不无限增长);单测覆盖 free list 正确性与并发。
 - **难度 / 工时**:⭐⭐⭐⭐ / 4~6 天。
 - **产出物**:可管理的 DataRegion + free list。
+- **执行规格**:[S09-data-region-freelist](sessions/S09-data-region-freelist.md)
 
 ---
 
