@@ -61,4 +61,27 @@
 
 ---
 
+## Phase 3(页内存 PageMemory)
+
+### 情况 A:延后到下游 session(roadmap 跟踪)
+
+| 功能 | 去向 | 出处 |
+|---|---|---|
+| 全局 Treiber free-list(页回收复用:侵入式 next + ABA 计数器) | → S9 | S08 讲义 对照 |
+| 多段惰性增长(SEG_CNT=16,`addSegment`) | → S9 | S08 讲义 对照 |
+| 条带 `OffheapReadWriteLock`(页内 8B 锁字 + tag 防陈旧 + upgrade) | → S9 | S08 讲义 对照 |
+| `DataRegion` 容器 + `DirectMemoryProvider` 抽象 + lifecycle 装配 | → S9 | S08 讲义 对照 |
+
+### 情况 B:out-of-scope(无 session,backlog)
+
+| 功能 | 为什么简化/跳过 | 出处 | 深入优先级 |
+|---|---|---|---|
+| 页驱逐(`PageEvictionTracker`:NoOp/RANDOM_LRU/RANDOM_2_LRU) | 功能:Ignite `PageMemoryNoStoreImpl` 本身零驱逐逻辑,驱逐是外挂协作者;学习版 deferred | S08 讲义 对照 | 高(生产必需) |
+| `SharedSecrets`/JavaNioAccess wrapPointer 路径 | 简化:Ignite JDK12+ 优先 JavaNioAccess,学习版只用构造器反射一条路 | S08 讲义 陷阱 | 低 |
+| FFM(`java.lang.foreign.MemorySegment`)材质 | 保真优先:Unsafe 让 S9 无锁 free-list / 页内锁字依赖裸地址写;FFM 为备选切换点(`OffHeap`) | S08 讲义 对照 | 中(JDK 后续若移除 Unsafe) |
+| `metrics()` 上漏(`DataRegionMetricsImpl`) | 解耦:返回类型会把 cache 子系统依赖漏进 `PageMemory` 接口;S9 自定轻量 metrics | S08 讲义 对照 | 低 |
+| `trackAcquiredPages` 测试计数器 | 测试专用:Ignite `releasePage` 仅 `trackAcquiredPages=true` 时减计数;学习版 `releasePage` no-op | S08 讲义 对照 | 低 |
+
+---
+
 > **后续 phase 逐个追加**(Phase 2~14),格式同上。35 session 完成后,out-of-scope 列 = "进阶深入"菜单。

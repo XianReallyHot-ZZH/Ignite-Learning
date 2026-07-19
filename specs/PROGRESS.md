@@ -5,8 +5,8 @@
 > 图例:☐ 未开始 · ◐ 进行中 · ☑ 完成
 
 ## 当前位置
-- **最近完成**:**Phase 3 源码分析** —— `specs/phases/P03-page-memory-analysis.md`(8 节 + §6 v级拆分 + §4.1「free list」澄清 + §1 现实校准:`Unsafe`+裸 `long` 非 DirectByteBuffer/引用计数;`freelist/` 包是行级非页回收);`check-cited-paths` **29/29 OK**。上一步:S7 Marshaller v2(`s07-marshaller/`、`mvn test` **31 passed**)→ **Phase 2 收官 ✅**。
-- **下一步**:**Phase 3 存储支(S8~S9)** —— `/ignite-session-doc 08`(页内存 v1:PageIdUtils 位运算 + 纯内存实现)→ `/ignite-session-code 08` → S9(DataRegion + Treiber free-list + 条带 R/W 锁)。**完全隔离,无需集群;M1 要到 S15。**
+- **最近完成**:**S08 代码 + 讲义** —— `ignite-gogogo/s08-page-memory/`(`mvn test` **10 passed**):`PageIdUtils` 位运算 + `FullPageId` rotation-blind + `PageMemory` 裸 long 契约 + `OffHeap`(包 `sun.misc.Unsafe`,反射 `DirectByteBuffer` 构造器 wrapPointer) + `PageMemoryNoStoreImpl` 单段 24B 头 + 粗锁占位。讲义 `docs-learn/S08-page-memory-v1.md`。踩坑:JDK21 的 `DirectByteBuffer` 只有 `private (long,long)` 构造器(无 `(long,int)`),需 `buf.getClass()` try 两签名 + surefire `--add-opens java.base/java.nio`。上一步:S08 执行规格(7/7 cited)。
+- **下一步**:**Phase 3 → S9** —— `/ignite-session-doc 09`(`PageMemory` v2:全局 Treiber free-list[侵入式 next + ABA 计数器] + 多段惰性增长 + `DataRegion` 容器 + 条带 `OffheapReadWriteLock`[页内 8B 锁字 + tag 防陈旧])→ `/ignite-session-code 09`。**完全隔离,无需集群;M1 要到 S15。**
 - **试点**:Phase 1(NIO)流水线验证中;Phase 0(S1~S2)试点期间暂越过(真做课程时 Phase 0 先行)。
 
 ## 基础设施(已建立)
@@ -47,7 +47,7 @@
 | **S5** | **NIO v3(recovery+背压)** | ☑ `S05-nio-v3.md` | ☑ `s05-nio-v3/` | ☑ 18 passed | ☑ | ☑ |
 | **S6** | **Direct 编解码 v1** | ☑ `S06-direct-codec.md` | ☑ `s06-direct-codec/` | ☑ 25 passed | ☑ | ☑ |
 | **S7** | **Marshaller v2** | ☑ `S07-marshaller.md` | ☑ `s07-marshaller/` | ☑ 31 passed | ☑ | ☑ |
-| S8 | 页内存 v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
+| **S8** | **页内存 v1** | ☑ `S08-page-memory-v1.md` | ☑ `s08-page-memory/` | ☑ 10 passed | ☑ | ☑ |
 | S9 | DataRegion + free list | ☐ | ☐ | ☐ | ☐ | ☐ |
 | S10 | WAL v1 | ☐ | ☐ | ☐ | ☐ | ☐ |
 | S11 | WAL 回放 | ☐ | ☐ | ☐ | ☐ | ☐ |
@@ -95,5 +95,6 @@
 - `ignite-gogogo/s05-nio-v3/`:`mvn test` → **18 passed, 0 failed**(继承 10 + RecoveryDescriptor 5 + RecoveryResend 1 + SendBackpressure 1 + ReceiveBackpressure 1)。
 - `ignite-gogogo/s06-direct-codec/`:`mvn test` → **25 passed, 0 failed**(继承 18 + DirectMessageRoundtrip 5 + MessageFactory 1 + PingMessageOverNio 1;NioServer 泛化 `<T>` + Direct 编解码 seam 叠 CodecFilter 帧)。
 - `ignite-gogogo/s07-marshaller/`:`mvn test` → **31 passed, 0 failed**(继承 25 + OptimizedMarshaller 4[pojo/嵌套数组/环/体积对比] + MarshallerContext 1 + MarshallerViaDirect 1;自定义紧凑格式 + handle 环检测 + 反射;**Phase 2 收官**)。
+- `ignite-gogogo/s08-page-memory/`:`mvn test` → **10 passed, 0 failed**(PageIdUtils 4[往返/边界/effectivePageId/rotate永不为0] + FullPageId 2[rotation-blind/NULL_PAGE] + PageMemoryNoStoreImpl 4[pageBuffer往返/多页不重叠/页头24B布局/段满OOM];裸 long + `sun.misc.Unsafe` + 24B 头 + 单段 bump;**Phase 3 开篇**;surefire `--add-opens java.base/java.nio`)。
 - `ignite-gogogo/s01-skeleton/`:`mvn test` → **1 passed**(HelloTest;多模块骨架,后续复制源)。
 - `ignite-gogogo/s02-nio-warmup/`:`mvn test` → **1 passed**(EchoTest#echoRoundtrip;单线程 Selector echo 往返)。
