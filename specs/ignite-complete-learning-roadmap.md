@@ -233,6 +233,7 @@ flowchart LR
 - **验收**:单测覆盖分配/释放/读写页字节、页 id 编解码往返。
 - **难度 / 工时**:⭐⭐⭐ / 3~5 天。
 - **产出物**:`PageMemory` 纯内存实现。
+- **执行规格**:[S08-page-memory-v1](sessions/S08-page-memory-v1.md)
 
 ### Session 9(S9)— PageMemory v2:DataRegion + free list
 - **镜像源码**:`.../internal/pagemem/`(DataRegion、`PageMemoryNoStoreImpl` 的分配/free list 部分)。
